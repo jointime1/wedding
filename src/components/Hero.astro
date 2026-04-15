@@ -1,4 +1,8 @@
 ---
+export interface Props {
+  includePicnic: boolean;
+}
+const { includePicnic } = Astro.props;
 ---
 <section class="relative overflow-hidden">
   <div class="container-narrow pt-24 pb-16 md:pt-32 md:pb-24 text-center">
@@ -10,7 +14,7 @@
     </h1>
     <div class="mt-10 rule reveal"></div>
     <p class="mt-10 font-display text-2xl md:text-3xl reveal">
-      19 и 20 сентября 2026
+      {includePicnic ? '19 и 20 сентября 2026' : '19 сентября 2026'}
     </p>
   </div>
 
