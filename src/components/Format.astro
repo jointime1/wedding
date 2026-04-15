@@ -3,24 +3,44 @@ import Ornament from './Ornament.astro';
 export interface Props { includePicnic: boolean }
 const { includePicnic } = Astro.props;
 ---
-<section class="section">
-  <div class="container-narrow text-center">
-    <p class="eyebrow reveal">О формате</p>
-    <div class="mt-8 reveal">
-      <svg width="28" height="22" viewBox="0 0 28 22" class="mx-auto text-terracotta/60" fill="currentColor" aria-hidden="true">
-        <path d="M0 22 Q0 8 12 0 L12 10 Q4 12 4 22 Z M16 22 Q16 8 28 0 L28 10 Q20 12 20 22 Z" />
-      </svg>
+<section class="section relative">
+  <!-- decorative side ornaments -->
+  <div class="hidden md:block absolute top-32 left-10 text-clay/30 reveal">
+    <Ornament variant="diamond" class="w-6 h-6" />
+  </div>
+  <div class="hidden md:block absolute bottom-32 right-12 text-moss/40 reveal">
+    <Ornament variant="diamond" class="w-6 h-6" />
+  </div>
+
+  <div class="container-narrow relative">
+    <div class="text-center">
+      <p class="eyebrow reveal">
+        <span class="dot-ornament"></span>О формате<span class="dot-ornament"></span>
+      </p>
+
+      <div class="mt-6 reveal text-terracotta/70">
+        <Ornament variant="leaves" class="mx-auto" />
+      </div>
+
+      <p class="mt-10 font-display italic text-3xl md:text-5xl leading-[1.18] reveal">
+        {includePicnic
+          ? 'Мы зовём вас на два дня — большой вечер во Владикавказе и тихое утро в горах.'
+          : 'Мы зовём вас на наш день — большой, тёплый и важный для нас вечер во Владикавказе.'}
+      </p>
+
+      <div class="mt-12 text-ink/55 reveal"><Ornament variant="rule" /></div>
     </div>
-    <p class="mt-8 font-display italic text-3xl md:text-5xl leading-[1.15] reveal">
-      {includePicnic
-        ? 'Мы зовём вас на два дня — большой вечер во Владикавказе и тихое утро в горах.'
-        : 'Мы зовём вас на наш день — большой, тёплый и важный для нас вечер во Владикавказе.'}
-    </p>
-    <div class="mt-12 text-ink/70 reveal"><Ornament /></div>
-    <p class="mt-10 max-w-xl mx-auto text-muted leading-relaxed reveal">
-      {includePicnic
-        ? 'Девятнадцатого — торжество, музыка и все, кто нам дорог. Двадцатого — уезжаем небольшой компанией в горы на пикник, чтобы побыть вместе ещё немного.'
-        : 'Всё главное — в один вечер. Встречаемся в сентябре во Владикавказе и отмечаем как следует.'}
-    </p>
+
+    <!-- Letter-style paragraph with drop cap -->
+    <div class="mt-12 reveal mx-auto max-w-xl text-left">
+      <p class="dropcap text-ink/85 leading-[1.85] text-[1.05rem]">
+        {includePicnic
+          ? 'Девятнадцатого сентября — торжество, музыка и все, кто нам дорог. Двадцатого — уезжаем небольшой компанией в горы на пикник, чтобы побыть вместе ещё немного, без расписания и спешки.'
+          : 'Всё главное — в один вечер. Встречаемся в сентябре во Владикавказе и отмечаем как следует: с долгими тостами, музыкой и людьми, без которых эта свадьба была бы не та.'}
+      </p>
+      <p class="mt-6 text-right font-display serif-italic text-2xl text-clay">
+        — с любовью, Дана и Саша
+      </p>
+    </div>
   </div>
 </section>

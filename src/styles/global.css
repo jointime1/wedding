@@ -9,10 +9,12 @@
   body {
     @apply bg-paper text-ink font-sans antialiased;
     font-feature-settings: "ss01", "cv11";
+    background-color: #F5ECD9;
     background-image:
-      radial-gradient(at 12% 8%, rgba(184, 92, 60, 0.08) 0px, transparent 55%),
-      radial-gradient(at 88% 4%, rgba(168, 135, 62, 0.07) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(111, 123, 102, 0.1) 0px, transparent 60%);
+      radial-gradient(at 8% 4%, rgba(184, 92, 60, 0.10) 0px, transparent 45%),
+      radial-gradient(at 92% 2%, rgba(168, 135, 62, 0.10) 0px, transparent 45%),
+      radial-gradient(at 50% 100%, rgba(78, 89, 70, 0.12) 0px, transparent 55%),
+      radial-gradient(at 30% 60%, rgba(217, 168, 151, 0.07) 0px, transparent 50%);
     background-attachment: fixed;
   }
   h1, h2, h3 {
@@ -40,7 +42,7 @@
   }
   .reveal {
     opacity: 0; transform: translateY(14px);
-    transition: opacity 700ms ease, transform 700ms ease;
+    transition: opacity 900ms cubic-bezier(.2,.6,.2,1), transform 900ms cubic-bezier(.2,.6,.2,1);
   }
   .reveal.is-visible { opacity: 1; transform: none; }
   .grain::before {
@@ -50,16 +52,142 @@
     opacity: 0.18; mix-blend-mode: multiply;
   }
   .serif-italic { @apply font-display italic; }
-  .hair-rule {
-    height: 1px; background: currentColor; opacity: 0.25;
-  }
+  .hair-rule { height: 1px; background: currentColor; opacity: 0.25; }
+
+  /* Vintage box border (double-line frame) */
   .vintage-border {
     position: relative;
-    box-shadow: inset 0 0 0 1px rgba(26,20,16,0.2), inset 0 0 0 6px transparent, inset 0 0 0 7px rgba(26,20,16,0.15);
+    box-shadow:
+      inset 0 0 0 1px rgba(26,20,16,0.22),
+      inset 0 0 0 6px transparent,
+      inset 0 0 0 7px rgba(26,20,16,0.15);
+  }
+
+  /* Letterpress emboss for huge type */
+  .letterpress {
+    text-shadow:
+      0 1px 0 rgba(255,255,255,0.55),
+      0 -1px 0 rgba(26,20,16,0.10);
+  }
+
+  /* Hand-drawn underline using SVG */
+  .underline-hand {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M2 7 C 40 1, 80 11, 120 5 S 198 6, 198 6' fill='none' stroke='%23B85C3C' stroke-width='1.5' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 0.5em;
+    padding-bottom: 0.18em;
+  }
+
+  /* Torn / deckle paper edge — top and bottom */
+  .deckle-top {
+    -webkit-mask-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='28' viewBox='0 0 1200 28' preserveAspectRatio='none'><path d='M0 28 L0 14 C 40 8, 80 18, 120 12 S 200 4, 240 14 S 320 22, 360 12 S 440 6, 480 16 S 560 20, 600 10 S 680 4, 720 14 S 800 22, 840 10 S 920 6, 960 14 S 1040 22, 1080 12 S 1160 4, 1200 14 L 1200 28 Z' fill='black'/></svg>"),
+      linear-gradient(black, black);
+    -webkit-mask-position: top, 0 28px;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-size: 100% 28px, 100% calc(100% - 28px);
+    mask-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='28' viewBox='0 0 1200 28' preserveAspectRatio='none'><path d='M0 28 L0 14 C 40 8, 80 18, 120 12 S 200 4, 240 14 S 320 22, 360 12 S 440 6, 480 16 S 560 20, 600 10 S 680 4, 720 14 S 800 22, 840 10 S 920 6, 960 14 S 1040 22, 1080 12 S 1160 4, 1200 14 L 1200 28 Z' fill='black'/></svg>"),
+      linear-gradient(black, black);
+    mask-position: top, 0 28px;
+    mask-repeat: no-repeat, no-repeat;
+    mask-size: 100% 28px, 100% calc(100% - 28px);
+  }
+
+  /* Ornate corner flourish — applied as ::before/::after on a parent .ornate-frame */
+  .ornate-frame { position: relative; }
+  .ornate-frame::before,
+  .ornate-frame::after {
+    content: "";
+    position: absolute;
+    width: 56px; height: 56px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'><g fill='none' stroke='%231A1410' stroke-width='0.9' opacity='0.55'><path d='M2 18 C 2 8, 8 2, 18 2 M 2 14 C 2 7, 7 2, 14 2'/><circle cx='12' cy='12' r='1.5' fill='%231A1410'/><path d='M18 2 L 36 2' opacity='0.4'/><path d='M2 18 L 2 36' opacity='0.4'/><path d='M22 6 L 30 6 M 26 2 L 26 10' stroke-width='0.6' opacity='0.4'/><path d='M6 22 L 6 30 M 2 26 L 10 26' stroke-width='0.6' opacity='0.4'/></g></svg>");
+  }
+  .ornate-frame::before { top: -2px; left: -2px; }
+  .ornate-frame::after { top: -2px; right: -2px; transform: scaleX(-1); }
+  .ornate-frame > .corner-bl,
+  .ornate-frame > .corner-br {
+    position: absolute; width: 56px; height: 56px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'><g fill='none' stroke='%231A1410' stroke-width='0.9' opacity='0.55'><path d='M2 18 C 2 8, 8 2, 18 2 M 2 14 C 2 7, 7 2, 14 2'/><circle cx='12' cy='12' r='1.5' fill='%231A1410'/><path d='M18 2 L 36 2' opacity='0.4'/><path d='M2 18 L 2 36' opacity='0.4'/><path d='M22 6 L 30 6 M 26 2 L 26 10' stroke-width='0.6' opacity='0.4'/><path d='M6 22 L 6 30 M 2 26 L 10 26' stroke-width='0.6' opacity='0.4'/></g></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+  }
+  .ornate-frame > .corner-bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+  .ornate-frame > .corner-br { bottom: -2px; right: -2px; transform: scale(-1, -1); }
+
+  /* Slow rotation for sun-cross emblem */
+  .spin-slow { animation: spin 90s linear infinite; transform-origin: 50% 50%; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Cloud drift */
+  .drift-slow { animation: drift 38s ease-in-out infinite alternate; }
+  @keyframes drift { from { transform: translateX(-30px); } to { transform: translateX(30px); } }
+
+  /* Subtle floating */
+  .float-soft { animation: floaty 9s ease-in-out infinite alternate; }
+  @keyframes floaty { from { transform: translateY(-4px); } to { transform: translateY(4px); } }
+
+  /* Drop cap for editorial paragraphs */
+  .dropcap::first-letter {
+    @apply font-display;
+    float: left;
+    font-style: italic;
+    font-size: 5.2rem;
+    line-height: 0.85;
+    padding: 0.35rem 0.6rem 0 0;
+    color: #B85C3C;
+  }
+
+  /* Tape strip — vintage washi */
+  .tape {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(184,92,60,0.22), rgba(168,135,62,0.18));
+    box-shadow: 0 1px 0 rgba(26,20,16,0.06), 0 8px 18px -10px rgba(26,20,16,0.4);
+    backdrop-filter: blur(0.5px);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 6px, black calc(100% - 6px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, black 6px, black calc(100% - 6px), transparent 100%);
+  }
+
+  /* Postal perforation around an element */
+  .perforate {
+    --perf: rgba(26,20,16,0.18);
+    background:
+      radial-gradient(circle at 6px 6px, var(--perf) 1.6px, transparent 2px) top left / 14px 14px repeat-x,
+      radial-gradient(circle at 6px 6px, var(--perf) 1.6px, transparent 2px) bottom left / 14px 14px repeat-x,
+      radial-gradient(circle at 6px 6px, var(--perf) 1.6px, transparent 2px) top left / 14px 14px repeat-y,
+      radial-gradient(circle at 6px 6px, var(--perf) 1.6px, transparent 2px) top right / 14px 14px repeat-y;
+    background-color: transparent;
+  }
+
+  /* Stacked paper effect */
+  .paper-stack {
+    position: relative;
+  }
+  .paper-stack::before,
+  .paper-stack::after {
+    content: ""; position: absolute; inset: 0; background: inherit;
+    box-shadow: 0 1px 0 rgba(26,20,16,0.18), 0 30px 40px -30px rgba(26,20,16,0.4);
+    z-index: -1;
+  }
+  .paper-stack::before { transform: rotate(-1.2deg) translate(-6px, 4px); }
+  .paper-stack::after  { transform: rotate(1.6deg)  translate(8px, 6px); }
+
+  /* Small sparkle dot */
+  .dot-ornament::before {
+    content: "·";
+    display: inline-block;
+    margin: 0 0.6em;
+    color: currentColor; opacity: 0.5;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
+  .spin-slow, .drift-slow, .float-soft { animation: none; }
   html { scroll-behavior: auto; }
 }

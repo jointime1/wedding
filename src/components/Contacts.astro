@@ -4,38 +4,61 @@ const env = import.meta.env;
 const dana = env.PUBLIC_CONTACT_DANA ?? '';
 const alex = env.PUBLIC_CONTACT_ALEX ?? '';
 ---
-<section class="section">
+<section class="section relative">
   <div class="container-wide">
     <div class="text-center reveal">
       <p class="eyebrow">По всем вопросам</p>
-      <h2 class="mt-5 text-4xl md:text-5xl font-display">Пишите нам <span class="serif-italic text-terracotta">напрямую</span></h2>
-      <div class="mt-6 text-ink/60"><Ornament /></div>
+      <h2 class="mt-5 text-4xl md:text-5xl font-display">
+        Пишите нам <span class="serif-italic text-terracotta">напрямую</span>
+      </h2>
+      <div class="mt-6 text-ink/55 mx-auto"><Ornament variant="rule" /></div>
     </div>
 
-    <div class="mt-16 grid gap-px sm:grid-cols-2 bg-ink/15 border border-ink/15 reveal">
-      <div class="bg-paper p-10 md:p-14 text-center">
+    <div class="mt-16 grid gap-6 sm:grid-cols-2 reveal">
+      <!-- Calling card 1 -->
+      <div class="ornate-frame relative bg-paper vintage-border p-10 md:p-12 text-center -rotate-[0.6deg] hover:rotate-0 transition-transform duration-500 cursor-default">
+        <span class="corner-bl"></span><span class="corner-br"></span>
         <p class="eyebrow">Невеста</p>
-        <p class="mt-5 font-display serif-italic text-5xl">Дана</p>
-        <p class="mt-4 font-mono text-sm tracking-wider">{dana || '+7 000 000 00 00'}</p>
+        <p class="mt-5 font-display serif-italic text-6xl">Дана</p>
+        <div class="mt-4 text-ink/40 mx-auto"><Ornament variant="rule" class="mx-auto w-32" /></div>
+        <a href={dana ? `tel:${dana.replace(/\s/g,'')}` : '#'}
+           class="mt-4 block font-mono text-sm tracking-wider hover:text-terracotta transition-colors cursor-pointer">
+          {dana || '+7 000 000 00 00'}
+        </a>
       </div>
-      <div class="bg-paper p-10 md:p-14 text-center">
+
+      <!-- Calling card 2 -->
+      <div class="ornate-frame relative bg-paper vintage-border p-10 md:p-12 text-center rotate-[0.6deg] hover:rotate-0 transition-transform duration-500 cursor-default">
+        <span class="corner-bl"></span><span class="corner-br"></span>
         <p class="eyebrow">Жених</p>
-        <p class="mt-5 font-display serif-italic text-5xl">Александр</p>
-        <p class="mt-4 font-mono text-sm tracking-wider">{alex || '+7 000 000 00 00'}</p>
+        <p class="mt-5 font-display serif-italic text-6xl">Александр</p>
+        <div class="mt-4 text-ink/40 mx-auto"><Ornament variant="rule" class="mx-auto w-32" /></div>
+        <a href={alex ? `tel:${alex.replace(/\s/g,'')}` : '#'}
+           class="mt-4 block font-mono text-sm tracking-wider hover:text-terracotta transition-colors cursor-pointer">
+          {alex || '+7 000 000 00 00'}
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<footer class="relative pb-20 pt-8 text-center overflow-hidden">
+<footer class="relative pt-12 pb-20 text-center overflow-hidden">
+  <!-- closing emblem -->
+  <div class="reveal text-clay/40 mb-8">
+    <div class="spin-slow inline-block">
+      <Ornament variant="sun" class="mx-auto w-24 h-24" />
+    </div>
+  </div>
+
   <div class="container-narrow">
-    <p class="font-display serif-italic text-3xl reveal">
+    <p class="font-display serif-italic text-4xl reveal">
       <span>Дана</span>
       <span class="text-terracotta mx-3">&amp;</span>
       <span>Александр</span>
     </p>
-    <p class="mt-3 font-mono text-[0.65rem] tracking-editorial uppercase text-muted reveal">
-      Владикавказ · MMXXVI
+    <div class="mt-4 reveal text-ink/40 mx-auto"><Ornament variant="rule" /></div>
+    <p class="mt-4 font-mono text-[0.65rem] tracking-editorial uppercase text-muted reveal">
+      Владикавказ <span class="dot-ornament"></span> MMXXVI <span class="dot-ornament"></span> с любовью
     </p>
   </div>
 </footer>

@@ -4,75 +4,176 @@ export interface Props {
   includePicnic: boolean;
 }
 const { includePicnic } = Astro.props;
+const datesShort = includePicnic ? '19 · 20 · IX · MMXXVI' : '19 · IX · MMXXVI';
+const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MMXXVI';
 ---
-<section class="relative overflow-hidden grain">
-  <!-- vertical ribbon, desktop only -->
-  <div class="hidden md:flex absolute left-6 top-0 h-full items-center pointer-events-none select-none">
+<section class="relative overflow-hidden grain pt-10 pb-0 md:pt-14">
+  <!-- Vertical marginalia -->
+  <div class="hidden md:flex absolute left-6 top-0 h-full items-center pointer-events-none select-none z-10">
     <div class="font-mono text-[0.65rem] tracking-[0.4em] uppercase text-muted [writing-mode:vertical-rl] rotate-180">
-      {includePicnic ? 'XIX · XX · IX · MMXXVI · Владикавказ' : 'XIX · IX · MMXXVI · Владикавказ'}
+      {datesLong} · Владикавказ · Кавказ
     </div>
   </div>
-  <div class="hidden md:flex absolute right-6 top-0 h-full items-center pointer-events-none select-none">
+  <div class="hidden md:flex absolute right-6 top-0 h-full items-center pointer-events-none select-none z-10">
     <div class="font-mono text-[0.65rem] tracking-[0.4em] uppercase text-muted [writing-mode:vertical-rl]">
-      Свадьба · {includePicnic ? 'и пикник в горах' : 'Владикавказ'}
+      Свадьба · {includePicnic ? 'и пикник в горах Осетии' : 'во Владикавказе'} · MMXXVI
     </div>
   </div>
 
-  <div class="container-wide pt-20 md:pt-28 pb-4">
+  <!-- Header bar -->
+  <div class="container-wide pb-2">
     <div class="flex items-center justify-between reveal">
-      <span class="eyebrow">№ 01 · Приглашение</span>
-      <span class="eyebrow">Кавказ · 2026</span>
+      <span class="eyebrow">№ 01 <span class="dot-ornament"></span> Приглашение</span>
+      <span class="hidden sm:inline-block w-px h-4 bg-ink/20"></span>
+      <span class="eyebrow">Кавказ <span class="dot-ornament"></span> 2026</span>
+    </div>
+    <div class="mt-3 hair-rule"></div>
+  </div>
+
+  <!-- Sun-cross emblem floating over composition -->
+  <div class="container-wide relative">
+    <div class="pointer-events-none select-none absolute -top-2 left-1/2 -translate-x-1/2 z-0 text-terracotta/35 float-soft">
+      <div class="spin-slow">
+        <Ornament variant="sun" class="w-40 h-40 md:w-56 md:h-56" />
+      </div>
     </div>
   </div>
 
-  <div class="container-wide pt-12 md:pt-20 pb-16 md:pb-24 text-center">
-    <h1 class="font-display leading-[0.92] reveal">
-      <span class="block text-[22vw] md:text-[15rem]">Дана</span>
-      <span class="block -my-4 md:-my-10 serif-italic text-[18vw] md:text-[11rem] text-terracotta">&amp;</span>
-      <span class="block text-[22vw] md:text-[15rem]">Александр</span>
+  <!-- Monogram + names -->
+  <div class="container-wide relative pt-20 md:pt-32 pb-12 md:pb-20 text-center">
+    <p class="reveal eyebrow text-clay">Просим разделить с нами день</p>
+
+    <h1 class="mt-6 font-display leading-[0.9] reveal letterpress relative z-[1]">
+      <span class="block text-[20vw] md:text-[14rem] tracking-[-0.02em]">Дана</span>
+      <span class="block -my-3 md:-my-8 relative">
+        <span class="serif-italic text-[18vw] md:text-[11rem] text-terracotta relative inline-block">
+          &amp;
+          <!-- tiny embellishments left/right of ampersand -->
+          <span class="hidden md:inline-block absolute top-1/2 -translate-y-1/2 -left-16 text-clay/60">
+            <Ornament variant="diamond" class="w-5 h-5" />
+          </span>
+          <span class="hidden md:inline-block absolute top-1/2 -translate-y-1/2 -right-16 text-clay/60">
+            <Ornament variant="diamond" class="w-5 h-5" />
+          </span>
+        </span>
+      </span>
+      <span class="block text-[20vw] md:text-[14rem] tracking-[-0.02em]">Александр</span>
     </h1>
 
+    <!-- Date plate -->
     <div class="mt-14 flex flex-col items-center text-ink reveal">
-      <Ornament class="text-ink/70" />
+      <div class="text-ink/70"><Ornament variant="leaves" /></div>
       <p class="mt-8 font-serif italic text-2xl md:text-3xl">
         {includePicnic ? 'девятнадцатого и двадцатого сентября' : 'девятнадцатого сентября'}
       </p>
-      <p class="mt-2 font-mono text-xs tracking-editorial uppercase text-muted">
-        {includePicnic ? '19 · 20 · 09 · 2026' : '19 · 09 · 2026'} — Владикавказ
+
+      <!-- Letterpress date block -->
+      <div class="mt-6 inline-flex items-stretch gap-0 border border-ink/30">
+        <div class="px-5 py-3 border-r border-ink/30">
+          <p class="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-muted">День</p>
+          <p class="font-display text-3xl leading-none">{includePicnic ? '19—20' : '19'}</p>
+        </div>
+        <div class="px-5 py-3 border-r border-ink/30">
+          <p class="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-muted">Месяц</p>
+          <p class="font-display serif-italic text-3xl leading-none">сентябрь</p>
+        </div>
+        <div class="px-5 py-3">
+          <p class="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-muted">Год</p>
+          <p class="font-display text-3xl leading-none">MMXXVI</p>
+        </div>
+      </div>
+
+      <p class="mt-5 font-mono text-[0.65rem] tracking-editorial uppercase text-muted">
+        {datesShort} <span class="dot-ornament"></span> Владикавказ <span class="dot-ornament"></span> 43.0°N · 44.6°E
       </p>
     </div>
 
     <a
       href="#rsvp"
-      class="mt-16 inline-flex items-center gap-2 font-mono text-[0.7rem] tracking-editorial uppercase text-muted hover:text-terracotta transition-colors reveal cursor-pointer"
+      class="group mt-14 inline-flex items-center gap-3 font-mono text-[0.7rem] tracking-editorial uppercase text-ink hover:text-terracotta transition-colors reveal cursor-pointer"
     >
+      <span class="w-12 h-px bg-current opacity-60 group-hover:w-16 transition-all duration-300"></span>
       <span>Подтвердить присутствие</span>
-      <svg width="20" height="10" viewBox="0 0 20 10" fill="none" aria-hidden="true">
-        <path d="M0 5 H18 M13 1 L18 5 L13 9" stroke="currentColor" stroke-width="1" />
-      </svg>
+      <span class="w-12 h-px bg-current opacity-60 group-hover:w-16 transition-all duration-300"></span>
     </a>
   </div>
 
-  <!-- mountain range -->
-  <svg class="block w-full text-moss" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0" stop-color="#F8F1E3" />
-        <stop offset="1" stop-color="#EAE0CC" />
-      </linearGradient>
-    </defs>
-    <rect width="1440" height="260" fill="url(#sky)" />
-    <!-- back ridge -->
-    <path d="M0 220 L80 170 L180 195 L280 140 L380 180 L500 110 L620 165 L740 130 L860 175 L980 120 L1100 170 L1220 135 L1340 180 L1440 150 L1440 260 L0 260 Z"
-          fill="#A89B88" opacity="0.55" />
-    <!-- mid ridge -->
-    <path d="M0 240 L120 200 L240 220 L360 160 L480 200 L600 145 L700 90 L760 135 L880 185 L1000 155 L1120 195 L1240 170 L1360 205 L1440 195 L1440 260 L0 260 Z"
-          fill="#6F7B66" opacity="0.75" />
-    <!-- Kazbek peak silhouette front -->
-    <path d="M0 260 L0 245 L160 220 L320 240 L460 195 L560 145 L660 60 L720 30 L780 75 L860 140 L960 195 L1100 225 L1240 210 L1360 235 L1440 220 L1440 260 Z"
-          fill="#4E5946" />
-    <!-- snow caps -->
-    <path d="M620 110 L660 60 L720 30 L780 75 L800 100 L760 85 L720 70 L680 85 L640 105 Z"
-          fill="#F8F1E3" opacity="0.85" />
-  </svg>
+  <!-- Wax seal — bottom-right corner of hero -->
+  <div class="hidden md:block absolute right-12 bottom-44 z-10 reveal">
+    <div class="relative w-28 h-28 rounded-full rotate-[-8deg]"
+         style="background: radial-gradient(circle at 35% 30%, #C16A45, #8C4A2F 60%, #5E2F1C); box-shadow: 0 8px 18px -8px rgba(0,0,0,0.5), inset 0 -6px 12px rgba(0,0,0,0.35), inset 0 4px 6px rgba(255,255,255,0.15);">
+      <div class="absolute inset-2 rounded-full border border-paper/30 flex flex-col items-center justify-center text-paper">
+        <span class="font-display serif-italic text-3xl leading-none">Д</span>
+        <span class="font-display text-[0.55rem] tracking-[0.4em] my-0.5 opacity-80">&amp;</span>
+        <span class="font-display serif-italic text-3xl leading-none">А</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layered Caucasus skyline with drifting clouds -->
+  <div class="relative mt-2">
+    <!-- clouds drift -->
+    <div class="absolute inset-0 pointer-events-none drift-slow opacity-70">
+      <svg class="w-full" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+        <g fill="#F8F1E3" opacity="0.85">
+          <ellipse cx="240" cy="80" rx="80" ry="9" />
+          <ellipse cx="280" cy="76" rx="50" ry="6" />
+          <ellipse cx="980" cy="60" rx="110" ry="10" />
+          <ellipse cx="1040" cy="56" rx="60" ry="6" />
+          <ellipse cx="600" cy="100" rx="90" ry="8" />
+        </g>
+      </svg>
+    </div>
+
+    <svg class="block w-full" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#F5ECD9" />
+          <stop offset="0.6" stop-color="#EAD9B8" />
+          <stop offset="1" stop-color="#D9C49B" />
+        </linearGradient>
+        <linearGradient id="ridge1" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#BFB29D" />
+          <stop offset="1" stop-color="#A89B88" />
+        </linearGradient>
+        <linearGradient id="ridge2" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#8A8B72" />
+          <stop offset="1" stop-color="#6F7B66" />
+        </linearGradient>
+        <linearGradient id="ridge3" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#5C6A53" />
+          <stop offset="1" stop-color="#3F4838" />
+        </linearGradient>
+      </defs>
+      <rect width="1440" height="260" fill="url(#sky)" />
+      <!-- Far ridge -->
+      <path d="M0 220 L80 170 L180 195 L280 140 L380 180 L500 110 L620 165 L740 130 L860 175 L980 120 L1100 170 L1220 135 L1340 180 L1440 150 L1440 260 L0 260 Z"
+            fill="url(#ridge1)" opacity="0.7" />
+      <!-- Mid ridge -->
+      <path d="M0 240 L120 200 L240 220 L360 160 L480 200 L600 145 L700 90 L760 135 L880 185 L1000 155 L1120 195 L1240 170 L1360 205 L1440 195 L1440 260 L0 260 Z"
+            fill="url(#ridge2)" opacity="0.85" />
+      <!-- Front Kazbek silhouette -->
+      <path d="M0 260 L0 245 L160 220 L320 240 L460 195 L560 145 L660 60 L720 30 L780 75 L860 140 L960 195 L1100 225 L1240 210 L1360 235 L1440 220 L1440 260 Z"
+            fill="url(#ridge3)" />
+      <!-- Snow caps (Kazbek) -->
+      <path d="M620 110 L660 60 L720 30 L780 75 L800 100 L760 85 L720 70 L680 85 L640 105 Z"
+            fill="#F8F1E3" opacity="0.9" />
+      <!-- Secondary snow streaks -->
+      <path d="M460 195 L500 165 L540 185 L520 195 Z" fill="#F8F1E3" opacity="0.45" />
+      <path d="M860 140 L890 120 L920 145 Z" fill="#F8F1E3" opacity="0.45" />
+      <!-- subtle birds -->
+      <g stroke="#1A1410" stroke-width="0.8" fill="none" opacity="0.55">
+        <path d="M340 70 q 4 -4 8 0 q 4 -4 8 0" />
+        <path d="M380 90 q 3 -3 6 0 q 3 -3 6 0" />
+        <path d="M1180 80 q 4 -4 8 0 q 4 -4 8 0" />
+      </g>
+    </svg>
+
+    <!-- Hand-lettered location strip -->
+    <div class="absolute bottom-3 left-0 right-0 text-center pointer-events-none">
+      <p class="font-display serif-italic text-paper/85 text-lg md:text-xl drop-shadow">
+        под взглядом Казбека
+      </p>
+    </div>
+  </div>
 </section>

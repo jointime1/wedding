@@ -1,74 +1,135 @@
 ---
+import Ornament from './Ornament.astro';
 export interface Props { includePicnic: boolean }
 const { includePicnic } = Astro.props;
 ---
 <section class="section relative">
   <div class="container-wide">
     <div class="text-center reveal">
-      <p class="eyebrow">Программа</p>
-      <h2 class="mt-4 text-5xl md:text-7xl font-display">Два акта <span class="serif-italic text-terracotta">одной</span> истории</h2>
+      <p class="eyebrow"><span class="dot-ornament"></span>Программа<span class="dot-ornament"></span></p>
+      <h2 class="mt-4 text-5xl md:text-7xl font-display">
+        {includePicnic ? 'Два акта' : 'Один вечер'}
+        <span class="serif-italic text-terracotta">
+          {includePicnic ? ' одной ' : ' одной '}
+        </span>
+        истории
+      </h2>
+      <div class="mt-6 text-ink/50 mx-auto"><Ornament variant="rule" /></div>
     </div>
 
-    <div class={`mt-20 grid gap-10 ${includePicnic ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-2xl mx-auto'}`}>
-      <!-- ACT I -->
-      <article class="relative overflow-hidden reveal vintage-border bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] p-10 md:p-14">
-        <div class="grain"></div>
-        <div class="relative">
-          <div class="flex items-baseline justify-between">
-            <span class="font-mono text-xs tracking-editorial uppercase text-clay">Актъ первый</span>
-            <span class="font-mono text-xs tracking-editorial uppercase text-muted">19 · 09</span>
+    <div class={`mt-20 grid gap-12 ${includePicnic ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-2xl mx-auto'}`}>
+      <!-- ACT I — Wedding playbill -->
+      <article class="relative reveal">
+        <!-- vintage tape -->
+        <span class="tape hidden md:block -top-3 left-12 w-24 h-6 -rotate-6"></span>
+
+        <div class="ornate-frame relative bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
+          <span class="corner-bl"></span><span class="corner-br"></span>
+          <div class="grain"></div>
+
+          <!-- Massive watermark Roman numeral -->
+          <span aria-hidden="true"
+                class="pointer-events-none select-none absolute -right-6 -bottom-12 font-display serif-italic text-[18rem] md:text-[24rem] leading-none text-terracotta/10">I</span>
+
+          <div class="relative">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-clay">Актъ первый</span>
+              <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-muted">19 · IX</span>
+            </div>
+
+            <div class="mt-8 flex items-center gap-4 text-clay/40">
+              <span class="hair-rule flex-1"></span>
+              <Ornament variant="diamond" class="w-4 h-4 text-clay" />
+              <span class="hair-rule flex-1"></span>
+            </div>
+
+            <div class="mt-10">
+              <p class="font-display serif-italic text-clay text-xl md:text-2xl">торжество и вечер</p>
+              <h3 class="mt-2 font-display text-5xl md:text-6xl leading-[0.95]">
+                Свадьба <span class="serif-italic text-terracotta">во Владикавказе</span>
+              </h3>
+            </div>
+
+            <p class="mt-8 leading-[1.85] text-ink/80">
+              Торжественная часть, ужин, музыка и танцы до поздней ночи — день, в котором нам важен каждый из&nbsp;вас.
+            </p>
+
+            <dl class="mt-10 grid grid-cols-2 gap-6 text-sm border-t border-clay/20 pt-6">
+              <div>
+                <dt class="eyebrow">Начало</dt>
+                <dd class="mt-2 font-serif italic text-lg">уточним ближе</dd>
+              </div>
+              <div>
+                <dt class="eyebrow">Адрес</dt>
+                <dd class="mt-2 font-serif italic text-lg">пришлём отдельно</dd>
+              </div>
+              <div>
+                <dt class="eyebrow">Дресс-код</dt>
+                <dd class="mt-2 font-serif italic text-lg">элегантный, тёплые тона</dd>
+              </div>
+              <div>
+                <dt class="eyebrow">Атмосфера</dt>
+                <dd class="mt-2 font-serif italic text-lg">долгие тосты, живая музыка</dd>
+              </div>
+            </dl>
           </div>
-          <div class="mt-6 flex items-start gap-6">
-            <span class="font-display serif-italic text-[9rem] md:text-[12rem] leading-[0.75] text-terracotta select-none">I</span>
-            <div class="pt-6">
-              <h3 class="font-display text-4xl md:text-5xl">Свадьба</h3>
-              <p class="mt-2 text-muted font-serif italic text-xl">во Владикавказе</p>
-            </div>
-          </div>
-          <p class="mt-10 leading-relaxed text-ink/80">
-            Торжественная часть, ужин, музыка и танцы до поздней ночи — день, в котором нам важен каждый из вас.
-          </p>
-          <dl class="mt-10 grid grid-cols-2 gap-6 text-sm">
-            <div>
-              <dt class="eyebrow">Начало</dt>
-              <dd class="mt-2 font-serif italic text-lg">уточним ближе</dd>
-            </div>
-            <div>
-              <dt class="eyebrow">Адрес</dt>
-              <dd class="mt-2 font-serif italic text-lg">пришлём отдельно</dd>
-            </div>
-          </dl>
         </div>
       </article>
 
       {includePicnic && (
-        <article class="relative overflow-hidden reveal vintage-border bg-gradient-to-br from-[#E3E7DA] via-paper to-[#D1DBC5] p-10 md:p-14">
-          <div class="grain"></div>
-          <div class="relative">
-            <div class="flex items-baseline justify-between">
-              <span class="font-mono text-xs tracking-editorial uppercase text-moss">Актъ второй</span>
-              <span class="font-mono text-xs tracking-editorial uppercase text-muted">20 · 09</span>
+        <article class="relative reveal md:mt-16">
+          <span class="tape hidden md:block -top-3 right-12 w-24 h-6 rotate-6"
+                style="background: linear-gradient(135deg, rgba(78,89,70,0.22), rgba(168,135,62,0.18));"></span>
+
+          <div class="ornate-frame relative bg-gradient-to-br from-[#E6EADC] via-paper to-[#D1DBC5] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
+            <span class="corner-bl"></span><span class="corner-br"></span>
+            <div class="grain"></div>
+
+            <span aria-hidden="true"
+                  class="pointer-events-none select-none absolute -left-8 -bottom-12 font-display serif-italic text-[18rem] md:text-[24rem] leading-none text-moss/15">II</span>
+
+            <div class="relative">
+              <div class="flex items-baseline justify-between">
+                <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-moss">Актъ второй</span>
+                <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-muted">20 · IX</span>
+              </div>
+
+              <div class="mt-8 flex items-center gap-4 text-moss/40">
+                <span class="hair-rule flex-1"></span>
+                <Ornament variant="diamond" class="w-4 h-4 text-moss" />
+                <span class="hair-rule flex-1"></span>
+              </div>
+
+              <div class="mt-10">
+                <p class="font-display serif-italic text-moss text-xl md:text-2xl">тихое утро в горах</p>
+                <h3 class="mt-2 font-display text-5xl md:text-6xl leading-[0.95]">
+                  Пикник <span class="serif-italic text-moss">в горах Осетии</span>
+                </h3>
+              </div>
+
+              <p class="mt-8 leading-[1.85] text-ink/80">
+                Уезжаем небольшой компанией в горы — провести день неспешно, с едой на траве, тишиной и видом, который останется с&nbsp;вами надолго.
+              </p>
+
+              <dl class="mt-10 grid grid-cols-2 gap-6 text-sm border-t border-moss/20 pt-6">
+                <div>
+                  <dt class="eyebrow">Сбор</dt>
+                  <dd class="mt-2 font-serif italic text-lg">утром, от отеля</dd>
+                </div>
+                <div>
+                  <dt class="eyebrow">Место</dt>
+                  <dd class="mt-2 font-serif italic text-lg">сюрприз</dd>
+                </div>
+                <div>
+                  <dt class="eyebrow">Что взять</dt>
+                  <dd class="mt-2 font-serif italic text-lg">тёплую куртку и улыбку</dd>
+                </div>
+                <div>
+                  <dt class="eyebrow">Дорога</dt>
+                  <dd class="mt-2 font-serif italic text-lg">~ полтора часа</dd>
+                </div>
+              </dl>
             </div>
-            <div class="mt-6 flex items-start gap-6">
-              <span class="font-display serif-italic text-[9rem] md:text-[12rem] leading-[0.75] text-moss select-none">II</span>
-              <div class="pt-6">
-                <h3 class="font-display text-4xl md:text-5xl">Пикник</h3>
-                <p class="mt-2 text-muted font-serif italic text-xl">в горах Осетии</p>
-              </div>
-            </div>
-            <p class="mt-10 leading-relaxed text-ink/80">
-              Уезжаем небольшой компанией в горы — провести день неспешно, с едой на траве, тишиной и видом, который останется с вами надолго.
-            </p>
-            <dl class="mt-10 grid grid-cols-2 gap-6 text-sm">
-              <div>
-                <dt class="eyebrow">Сбор</dt>
-                <dd class="mt-2 font-serif italic text-lg">утром, от отеля</dd>
-              </div>
-              <div>
-                <dt class="eyebrow">Место</dt>
-                <dd class="mt-2 font-serif italic text-lg">сюрприз</dd>
-              </div>
-            </dl>
           </div>
         </article>
       )}
