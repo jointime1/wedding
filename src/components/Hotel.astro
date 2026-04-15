@@ -1,17 +1,33 @@
 ---
+import Ornament from './Ornament.astro';
 ---
-<section class="section bg-ink/[0.03]">
-  <div class="container-narrow text-center">
-    <p class="text-xs tracking-[0.3em] uppercase text-muted reveal">Где остановиться</p>
-    <h2 class="mt-4 text-3xl md:text-4xl reveal">Гостиница со скидкой для гостей</h2>
-    <div class="rule mt-6 reveal"></div>
-    <p class="mt-8 text-lg leading-relaxed reveal">
-      Сейчас договариваемся с отелем во Владикавказе о специальной скидке
-      для наших гостей. Как только всё подтвердим — обновим этот блок
-      с названием, ценами и промокодом.
-    </p>
-    <p class="mt-4 text-sm text-muted reveal">
-      Если нужна помощь с бронированием прямо сейчас — напишите нам.
-    </p>
+<section class="section relative">
+  <div class="container-narrow">
+    <div class="relative mx-auto max-w-2xl reveal">
+      <!-- envelope card -->
+      <div class="relative bg-bone vintage-border p-10 md:p-14 text-center overflow-hidden">
+        <div class="grain"></div>
+        <!-- postage stamp -->
+        <div class="absolute top-6 right-6 w-20 h-24 border border-dashed border-clay/50 p-1.5 rotate-3">
+          <div class="w-full h-full bg-gradient-to-br from-terracotta/15 to-clay/20 flex flex-col items-center justify-center">
+            <span class="font-display serif-italic text-xl text-clay leading-none">D</span>
+            <span class="font-display text-[0.55rem] tracking-widest text-clay mt-0.5">&amp;</span>
+            <span class="font-display serif-italic text-xl text-clay leading-none mt-0.5">A</span>
+            <span class="font-mono text-[0.55rem] text-clay mt-1">2026</span>
+          </div>
+        </div>
+        <div class="relative">
+          <p class="eyebrow">Где остановиться</p>
+          <h2 class="mt-5 text-4xl md:text-5xl font-display">Гостиница <span class="serif-italic text-terracotta">со скидкой</span></h2>
+          <div class="mt-6 text-ink/60"><Ornament /></div>
+          <p class="mt-8 leading-relaxed text-ink/80">
+            Сейчас договариваемся с отелем во Владикавказе о специальной ставке для гостей. Как только всё подтвердим — обновим этот блок с названием, ценами и промокодом.
+          </p>
+          <p class="mt-4 text-sm text-muted font-serif italic">
+            Понадобится помощь с бронированием прямо сейчас — напишите нам.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>

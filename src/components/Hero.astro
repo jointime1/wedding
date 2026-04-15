@@ -1,38 +1,78 @@
 ---
+import Ornament from './Ornament.astro';
 export interface Props {
   includePicnic: boolean;
 }
 const { includePicnic } = Astro.props;
 ---
-<section class="relative overflow-hidden">
-  <div class="container-narrow pt-24 pb-16 md:pt-32 md:pb-24 text-center">
-    <p class="text-xs tracking-[0.3em] uppercase text-muted reveal">
-      Владикавказ · 2026
-    </p>
-    <h1 class="mt-6 font-display text-6xl md:text-8xl leading-[1.05] reveal">
-      Дана<br /><span class="italic text-terracotta">и</span><br />Александр
-    </h1>
-    <div class="mt-10 rule reveal"></div>
-    <p class="mt-10 font-display text-2xl md:text-3xl reveal">
-      {includePicnic ? '19 и 20 сентября 2026' : '19 сентября 2026'}
-    </p>
+<section class="relative overflow-hidden grain">
+  <!-- vertical ribbon, desktop only -->
+  <div class="hidden md:flex absolute left-6 top-0 h-full items-center pointer-events-none select-none">
+    <div class="font-mono text-[0.65rem] tracking-[0.4em] uppercase text-muted [writing-mode:vertical-rl] rotate-180">
+      {includePicnic ? 'XIX · XX · IX · MMXXVI · Владикавказ' : 'XIX · IX · MMXXVI · Владикавказ'}
+    </div>
+  </div>
+  <div class="hidden md:flex absolute right-6 top-0 h-full items-center pointer-events-none select-none">
+    <div class="font-mono text-[0.65rem] tracking-[0.4em] uppercase text-muted [writing-mode:vertical-rl]">
+      Свадьба · {includePicnic ? 'и пикник в горах' : 'Владикавказ'}
+    </div>
   </div>
 
-  <svg
-    class="block w-full text-sage/60"
-    viewBox="0 0 1200 140"
-    preserveAspectRatio="none"
-    aria-hidden="true"
-  >
-    <path
-      d="M0 140 L0 90 L120 60 L220 85 L340 40 L460 75 L580 25 L700 70 L820 35 L940 80 L1060 50 L1200 95 L1200 140 Z"
-      fill="currentColor"
-      opacity="0.5"
-    />
-    <path
-      d="M0 140 L0 110 L160 85 L300 105 L440 75 L580 100 L720 70 L860 95 L1000 80 L1140 105 L1200 95 L1200 140 Z"
-      fill="currentColor"
-      opacity="0.9"
-    />
+  <div class="container-wide pt-20 md:pt-28 pb-4">
+    <div class="flex items-center justify-between reveal">
+      <span class="eyebrow">№ 01 · Приглашение</span>
+      <span class="eyebrow">Кавказ · 2026</span>
+    </div>
+  </div>
+
+  <div class="container-wide pt-12 md:pt-20 pb-16 md:pb-24 text-center">
+    <h1 class="font-display leading-[0.92] reveal">
+      <span class="block text-[22vw] md:text-[15rem]">Дана</span>
+      <span class="block -my-4 md:-my-10 serif-italic text-[18vw] md:text-[11rem] text-terracotta">&amp;</span>
+      <span class="block text-[22vw] md:text-[15rem]">Александр</span>
+    </h1>
+
+    <div class="mt-14 flex flex-col items-center text-ink reveal">
+      <Ornament class="text-ink/70" />
+      <p class="mt-8 font-serif italic text-2xl md:text-3xl">
+        {includePicnic ? 'девятнадцатого и двадцатого сентября' : 'девятнадцатого сентября'}
+      </p>
+      <p class="mt-2 font-mono text-xs tracking-editorial uppercase text-muted">
+        {includePicnic ? '19 · 20 · 09 · 2026' : '19 · 09 · 2026'} — Владикавказ
+      </p>
+    </div>
+
+    <a
+      href="#rsvp"
+      class="mt-16 inline-flex items-center gap-2 font-mono text-[0.7rem] tracking-editorial uppercase text-muted hover:text-terracotta transition-colors reveal cursor-pointer"
+    >
+      <span>Подтвердить присутствие</span>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none" aria-hidden="true">
+        <path d="M0 5 H18 M13 1 L18 5 L13 9" stroke="currentColor" stroke-width="1" />
+      </svg>
+    </a>
+  </div>
+
+  <!-- mountain range -->
+  <svg class="block w-full text-moss" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="#F8F1E3" />
+        <stop offset="1" stop-color="#EAE0CC" />
+      </linearGradient>
+    </defs>
+    <rect width="1440" height="260" fill="url(#sky)" />
+    <!-- back ridge -->
+    <path d="M0 220 L80 170 L180 195 L280 140 L380 180 L500 110 L620 165 L740 130 L860 175 L980 120 L1100 170 L1220 135 L1340 180 L1440 150 L1440 260 L0 260 Z"
+          fill="#A89B88" opacity="0.55" />
+    <!-- mid ridge -->
+    <path d="M0 240 L120 200 L240 220 L360 160 L480 200 L600 145 L700 90 L760 135 L880 185 L1000 155 L1120 195 L1240 170 L1360 205 L1440 195 L1440 260 L0 260 Z"
+          fill="#6F7B66" opacity="0.75" />
+    <!-- Kazbek peak silhouette front -->
+    <path d="M0 260 L0 245 L160 220 L320 240 L460 195 L560 145 L660 60 L720 30 L780 75 L860 140 L960 195 L1100 225 L1240 210 L1360 235 L1440 220 L1440 260 Z"
+          fill="#4E5946" />
+    <!-- snow caps -->
+    <path d="M620 110 L660 60 L720 30 L780 75 L800 100 L760 85 L720 70 L680 85 L640 105 Z"
+          fill="#F8F1E3" opacity="0.85" />
   </svg>
 </section>

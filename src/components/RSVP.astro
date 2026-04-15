@@ -1,7 +1,5 @@
 ---
-export interface Props {
-  includePicnic: boolean;
-}
+export interface Props { includePicnic: boolean }
 const { includePicnic } = Astro.props;
 
 const env = import.meta.env;
@@ -12,97 +10,112 @@ const ePlusOne = env.PUBLIC_ENTRY_PLUS_ONE ?? 'entry.plusOne';
 const ePicnic = env.PUBLIC_ENTRY_PICNIC ?? 'entry.picnic';
 const eNote = env.PUBLIC_ENTRY_NOTE ?? 'entry.note';
 ---
-<section id="rsvp" class="section border-t border-ink/5 bg-cream">
-  <div class="container-narrow">
-    <h2 class="text-3xl md:text-4xl text-center reveal">Подтвердите, пожалуйста</h2>
-    <div class="rule mt-6 reveal"></div>
-    <p class="mt-6 text-center text-muted reveal">
-      Отметьте, будете ли с нами 19
-      {includePicnic ? '–20' : ''} сентября, чтобы нам было проще всё спланировать.
-    </p>
+<section id="rsvp" class="section relative bg-[#EFE5D1]">
+  <div class="grain"></div>
+  <div class="container-narrow relative">
+    <div class="text-center reveal">
+      <p class="eyebrow">Respondez s'il vous plaît</p>
+      <h2 class="mt-5 text-5xl md:text-7xl font-display">Будете <span class="serif-italic text-terracotta">с&nbsp;нами?</span></h2>
+      <p class="mt-6 text-muted">
+        Отметьте, придёте ли вы 19{includePicnic ? '–20' : ''} сентября, чтобы нам было проще всё спланировать.
+      </p>
+    </div>
 
-    <form
-      id="rsvp-form"
-      action={action}
-      method="POST"
-      target="rsvp-sink"
-      class="mt-12 grid gap-6 reveal"
-    >
-      <label class="block">
-        <span class="text-sm tracking-wide text-muted">Ваше имя</span>
-        <input
-          name={eName}
-          type="text"
-          required
-          autocomplete="name"
-          class="mt-2 w-full border-0 border-b border-ink/20 bg-transparent py-2 text-lg focus:border-terracotta focus:outline-none focus:ring-0"
-        />
-      </label>
+    <div class="relative mt-16 reveal">
+      <!-- corner marks -->
+      <span class="absolute -top-1 -left-1 w-5 h-5 border-t border-l border-ink/40"></span>
+      <span class="absolute -top-1 -right-1 w-5 h-5 border-t border-r border-ink/40"></span>
+      <span class="absolute -bottom-1 -left-1 w-5 h-5 border-b border-l border-ink/40"></span>
+      <span class="absolute -bottom-1 -right-1 w-5 h-5 border-b border-r border-ink/40"></span>
 
-      <fieldset class="mt-4">
-        <legend class="text-sm tracking-wide text-muted">Будете 19{includePicnic ? '–20' : ''} сентября?</legend>
-        <div class="mt-3 flex flex-wrap gap-6">
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input type="radio" name={eAttending} value="Да, буду" required class="accent-terracotta" />
-            <span>Да, буду</span>
-          </label>
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input type="radio" name={eAttending} value="К сожалению, не смогу" class="accent-terracotta" />
-            <span>К сожалению, не смогу</span>
-          </label>
-        </div>
-      </fieldset>
+      <form
+        id="rsvp-form"
+        action={action}
+        method="POST"
+        target="rsvp-sink"
+        class="bg-paper p-8 md:p-14 vintage-border grid gap-8"
+      >
+        <label class="block">
+          <span class="eyebrow">Ваше имя</span>
+          <input
+            name={eName}
+            type="text"
+            required
+            autocomplete="name"
+            class="mt-2 w-full border-0 border-b border-ink/30 bg-transparent py-3 text-xl font-serif italic focus:border-terracotta focus:outline-none focus:ring-0 placeholder:text-ink/30"
+            placeholder="Иван Иванов"
+          />
+        </label>
 
-      <fieldset class="mt-2">
-        <legend class="text-sm tracking-wide text-muted">Придёте один или с парой?</legend>
-        <div class="mt-3 flex flex-wrap gap-6">
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input type="radio" name={ePlusOne} value="Один(одна)" class="accent-terracotta" />
-            <span>Один(одна)</span>
-          </label>
-          <label class="inline-flex items-center gap-2 cursor-pointer">
-            <input type="radio" name={ePlusOne} value="С +1" class="accent-terracotta" />
-            <span>С +1</span>
-          </label>
-        </div>
-      </fieldset>
-
-      {includePicnic && (
-        <fieldset class="mt-2">
-          <legend class="text-sm tracking-wide text-muted">Поедете с нами на пикник 20 сентября?</legend>
-          <div class="mt-3 flex flex-wrap gap-6">
-            <label class="inline-flex items-center gap-2 cursor-pointer">
-              <input type="radio" name={ePicnic} value="Да, поеду" class="accent-terracotta" />
-              <span>Да, поеду</span>
+        <fieldset>
+          <legend class="eyebrow">Будете 19{includePicnic ? '–20' : ''} сентября?</legend>
+          <div class="mt-4 grid sm:grid-cols-2 gap-3">
+            <label class="group cursor-pointer flex items-center gap-3 border border-ink/20 px-5 py-4 hover:border-terracotta transition-colors has-[:checked]:border-terracotta has-[:checked]:bg-terracotta/5">
+              <input type="radio" name={eAttending} value="Да, буду" required class="accent-terracotta" />
+              <span class="font-serif italic text-lg">Да, буду</span>
             </label>
-            <label class="inline-flex items-center gap-2 cursor-pointer">
-              <input type="radio" name={ePicnic} value="Только свадьба" class="accent-terracotta" />
-              <span>Только свадьба</span>
+            <label class="group cursor-pointer flex items-center gap-3 border border-ink/20 px-5 py-4 hover:border-terracotta transition-colors has-[:checked]:border-terracotta has-[:checked]:bg-terracotta/5">
+              <input type="radio" name={eAttending} value="К сожалению, не смогу" class="accent-terracotta" />
+              <span class="font-serif italic text-lg">Не смогу</span>
             </label>
           </div>
         </fieldset>
-      )}
 
-      <label class="block">
-        <span class="text-sm tracking-wide text-muted">Комментарий (по желанию)</span>
-        <textarea
-          name={eNote}
-          rows="3"
-          class="mt-2 w-full border border-ink/15 bg-transparent px-3 py-2 focus:border-terracotta focus:outline-none focus:ring-0"
-        ></textarea>
-      </label>
+        <fieldset>
+          <legend class="eyebrow">Придёте один(одна) или с&nbsp;+1?</legend>
+          <div class="mt-4 grid sm:grid-cols-2 gap-3">
+            <label class="cursor-pointer flex items-center gap-3 border border-ink/20 px-5 py-4 hover:border-terracotta transition-colors has-[:checked]:border-terracotta has-[:checked]:bg-terracotta/5">
+              <input type="radio" name={ePlusOne} value="Один(одна)" class="accent-terracotta" />
+              <span class="font-serif italic text-lg">Один(одна)</span>
+            </label>
+            <label class="cursor-pointer flex items-center gap-3 border border-ink/20 px-5 py-4 hover:border-terracotta transition-colors has-[:checked]:border-terracotta has-[:checked]:bg-terracotta/5">
+              <input type="radio" name={ePlusOne} value="С +1" class="accent-terracotta" />
+              <span class="font-serif italic text-lg">С&nbsp;+1</span>
+            </label>
+          </div>
+        </fieldset>
 
-      <button
-        type="submit"
-        class="mt-4 inline-flex justify-center self-center bg-ink px-10 py-4 text-sm tracking-[0.25em] uppercase text-cream transition hover:bg-terracotta cursor-pointer"
-      >
-        Отправить
-      </button>
-    </form>
+        {includePicnic && (
+          <fieldset>
+            <legend class="eyebrow">Поедете на пикник 20 сентября?</legend>
+            <div class="mt-4 grid sm:grid-cols-2 gap-3">
+              <label class="cursor-pointer flex items-center gap-3 border border-ink/20 px-5 py-4 hover:border-moss transition-colors has-[:checked]:border-moss has-[:checked]:bg-moss/5">
+                <input type="radio" name={ePicnic} value="Да, поеду" class="accent-moss" />
+                <span class="font-serif italic text-lg">Да, в горы</span>
+              </label>
+              <label class="cursor-pointer flex items-center gap-3 border border-ink/20 px-5 py-4 hover:border-moss transition-colors has-[:checked]:border-moss has-[:checked]:bg-moss/5">
+                <input type="radio" name={ePicnic} value="Только свадьба" class="accent-moss" />
+                <span class="font-serif italic text-lg">Только свадьба</span>
+              </label>
+            </div>
+          </fieldset>
+        )}
 
-    <div id="rsvp-thanks" class="hidden mt-12 text-center reveal">
-      <p class="font-display text-3xl">Спасибо!</p>
-      <p class="mt-3 text-muted">Мы получили ваш ответ. До встречи в сентябре.</p>
+        <label class="block">
+          <span class="eyebrow">Комментарий (по желанию)</span>
+          <textarea
+            name={eNote}
+            rows="3"
+            class="mt-2 w-full border border-ink/20 bg-transparent px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
+            placeholder="Например: приеду с ребёнком, есть аллергия…"
+          ></textarea>
+        </label>
+
+        <button
+          type="submit"
+          class="group relative mt-4 inline-flex justify-center self-center overflow-hidden bg-ink px-12 py-5 font-mono text-xs tracking-editorial uppercase text-paper transition-colors hover:bg-terracotta cursor-pointer"
+        >
+          <span class="relative z-10">Отправить ответ</span>
+        </button>
+        <p class="text-center font-mono text-[0.65rem] tracking-editorial uppercase text-muted">
+          Ждём до 1 августа 2026
+        </p>
+      </form>
+    </div>
+
+    <div id="rsvp-thanks" class="hidden mt-16 text-center reveal">
+      <p class="font-display serif-italic text-5xl text-terracotta">Спасибо!</p>
+      <p class="mt-4 text-muted font-serif italic text-xl">Мы получили ваш ответ. До встречи в сентябре.</p>
     </div>
 
     <iframe name="rsvp-sink" class="hidden" aria-hidden="true" title="rsvp"></iframe>

@@ -1,17 +1,26 @@
 ---
-export interface Props {
-  includePicnic: boolean;
-}
+import Ornament from './Ornament.astro';
+export interface Props { includePicnic: boolean }
 const { includePicnic } = Astro.props;
 ---
-<section class="section bg-cream">
+<section class="section">
   <div class="container-narrow text-center">
-    <h2 class="text-3xl md:text-4xl reveal">Как пройдут эти два дня</h2>
-    <div class="rule mt-6 reveal"></div>
-    <p class="mt-10 text-lg leading-relaxed reveal">
+    <p class="eyebrow reveal">О формате</p>
+    <div class="mt-8 reveal">
+      <svg width="28" height="22" viewBox="0 0 28 22" class="mx-auto text-terracotta/60" fill="currentColor" aria-hidden="true">
+        <path d="M0 22 Q0 8 12 0 L12 10 Q4 12 4 22 Z M16 22 Q16 8 28 0 L28 10 Q20 12 20 22 Z" />
+      </svg>
+    </div>
+    <p class="mt-8 font-display italic text-3xl md:text-5xl leading-[1.15] reveal">
       {includePicnic
-        ? 'Мы собираем два дня подряд. 19 сентября — большая свадьба во Владикавказе со всеми близкими. А 20 сентября уезжаем с друзьями в горы — на неспешный пикник, чтобы побыть вместе ещё немного.'
-        : 'Мы зовём вас на свадьбу 19 сентября во Владикавказ. Один большой, тёплый и важный для нас день — со всеми, кто нам дорог.'}
+        ? 'Мы зовём вас на два дня — большой вечер во Владикавказе и тихое утро в горах.'
+        : 'Мы зовём вас на наш день — большой, тёплый и важный для нас вечер во Владикавказе.'}
+    </p>
+    <div class="mt-12 text-ink/70 reveal"><Ornament /></div>
+    <p class="mt-10 max-w-xl mx-auto text-muted leading-relaxed reveal">
+      {includePicnic
+        ? 'Девятнадцатого — торжество, музыка и все, кто нам дорог. Двадцатого — уезжаем небольшой компанией в горы на пикник, чтобы побыть вместе ещё немного.'
+        : 'Всё главное — в один вечер. Встречаемся в сентябре во Владикавказе и отмечаем как следует.'}
     </p>
   </div>
 </section>
