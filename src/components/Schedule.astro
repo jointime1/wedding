@@ -1,0 +1,37 @@
+---
+export interface Props {
+  includePicnic: boolean;
+}
+const { includePicnic } = Astro.props;
+---
+<section class="section border-t border-ink/5">
+  <div class="container-narrow">
+    <h2 class="text-3xl md:text-4xl text-center reveal">Программа</h2>
+    <div class="rule mt-6 reveal"></div>
+
+    <div class="mt-16 grid gap-10 md:grid-cols-2">
+      <article class="reveal">
+        <p class="text-xs tracking-[0.25em] uppercase text-terracotta">День первый</p>
+        <h3 class="mt-3 font-display text-3xl">19 сентября · пятница</h3>
+        <p class="mt-4 text-muted">Свадьба во Владикавказе</p>
+        <p class="mt-4 leading-relaxed">
+          Начало и адрес уточним ближе к дате. Будет торжественная часть,
+          ужин и много танцев до поздней ночи.
+        </p>
+      </article>
+
+      {includePicnic && (
+        <article class="reveal">
+          <p class="text-xs tracking-[0.25em] uppercase text-sage">День второй</p>
+          <h3 class="mt-3 font-display text-3xl">20 сентября · суббота</h3>
+          <p class="mt-4 text-muted">Пикник в горах</p>
+          <p class="mt-4 leading-relaxed">
+            Уезжаем небольшой компанией в горы — провести день неспешно,
+            с едой на траве, видом и тишиной. Место и время скинем
+            отдельно ближе к дате.
+          </p>
+        </article>
+      )}
+    </div>
+  </div>
+</section>

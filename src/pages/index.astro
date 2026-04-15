@@ -1,0 +1,16 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const target = `${base}/full`;
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Дана и Александр</title>
+  </head>
+  <body>
+    <p>Переход на <a href={target}>{target}</a>…</p>
+  </body>
+</html>

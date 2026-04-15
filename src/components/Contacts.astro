@@ -1,0 +1,25 @@
+---
+const env = import.meta.env;
+const dana = env.PUBLIC_CONTACT_DANA ?? '';
+const alex = env.PUBLIC_CONTACT_ALEX ?? '';
+---
+<section class="section">
+  <div class="container-narrow text-center">
+    <h2 class="text-3xl md:text-4xl reveal">Если что — пишите</h2>
+    <div class="rule mt-6 reveal"></div>
+    <div class="mt-10 grid gap-8 sm:grid-cols-2 reveal">
+      <div>
+        <p class="text-xs tracking-[0.25em] uppercase text-muted">Дана</p>
+        <p class="mt-2 font-display text-2xl">{dana || '+7 000 000 00 00'}</p>
+      </div>
+      <div>
+        <p class="text-xs tracking-[0.25em] uppercase text-muted">Александр</p>
+        <p class="mt-2 font-display text-2xl">{alex || '+7 000 000 00 00'}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="pb-16 pt-4 text-center text-sm text-muted">
+  <p class="reveal">С любовью, Дана и Саша</p>
+</footer>

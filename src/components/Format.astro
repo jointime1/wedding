@@ -1,0 +1,17 @@
+---
+export interface Props {
+  includePicnic: boolean;
+}
+const { includePicnic } = Astro.props;
+---
+<section class="section bg-cream">
+  <div class="container-narrow text-center">
+    <h2 class="text-3xl md:text-4xl reveal">Как пройдут эти два дня</h2>
+    <div class="rule mt-6 reveal"></div>
+    <p class="mt-10 text-lg leading-relaxed reveal">
+      {includePicnic
+        ? 'Мы собираем два дня подряд. 19 сентября — большая свадьба во Владикавказе со всеми близкими. А 20 сентября уезжаем с друзьями в горы — на неспешный пикник, чтобы побыть вместе ещё немного.'
+        : 'Мы зовём вас на свадьбу 19 сентября во Владикавказ. Один большой, тёплый и важный для нас день — со всеми, кто нам дорог.'}
+    </p>
+  </div>
+</section>
