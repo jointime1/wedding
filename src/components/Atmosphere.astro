@@ -1,0 +1,299 @@
+---
+// Ambient layers and easter eggs — flying eagle, idle sparkles, audio chimes,
+// Konami code reveals a galloping horse silhouette across the page,
+// snow drifts down from Kazbek peak.
+---
+<!-- Flying eagle silhouette — passes across the page periodically -->
+<div id="eagle" class="eagle" aria-hidden="true">
+  <svg viewBox="0 0 80 30" class="eagle-svg">
+    <g class="eagle-body" fill="#1A1410">
+      <path d="M40 14 q -8 -10, -22 -8 q 8 4, 14 6 q -10 -1, -16 4 q 10 -2, 18 0 q -8 4, -10 8 q 12 -4, 18 -4 z" />
+      <path d="M40 14 q 8 -10, 22 -8 q -8 4, -14 6 q 10 -1, 16 4 q -10 -2, -18 0 q 8 4, 10 8 q -12 -4, -18 -4 z" />
+      <ellipse cx="40" cy="15" rx="3" ry="2" />
+      <path d="M40 17 L 44 19 L 40 19 Z" />
+    </g>
+  </svg>
+</div>
+
+<!-- Snow over Kazbek peak (fixed near top) -->
+<div class="snow-layer" id="snow-layer" aria-hidden="true"></div>
+
+<!-- Konami easter egg overlay -->
+<div id="horse-gallop" class="horse-gallop" aria-hidden="true">
+  <svg viewBox="0 0 200 80" class="horse-svg">
+    <g fill="#1A1410">
+      <!-- silhouette of cantering horse -->
+      <path d="M20 50 q 20 -20, 50 -16 q 20 2, 30 -2 q 8 -2, 18 4 q 6 4, 14 -2 q 6 -6, 18 -4 q 12 4, 18 14 q -6 4, -14 4 q -10 0, -16 6 q -8 6, -16 4 q -10 -2, -16 4 q -8 6, -16 4 q -8 -2, -14 4 q -8 6, -16 4 q -10 -2, -22 0 q -10 2, -18 -8 q -4 -8, 0 -16 z" />
+      <!-- mane -->
+      <path d="M148 36 q 10 -6, 16 -2 q -6 2, -10 8 z" />
+      <!-- legs -->
+      <path d="M50 64 L 48 78 L 54 78 L 56 64 z" />
+      <path d="M70 66 L 68 80 L 74 80 L 76 66 z" />
+      <path d="M120 64 L 118 78 L 124 78 L 126 64 z" />
+      <path d="M140 66 L 138 80 L 144 80 L 146 66 z" />
+      <!-- tail -->
+      <path d="M22 52 q -10 -4, -18 4 q 6 6, 14 4 z" />
+    </g>
+  </svg>
+</div>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ─── Flying eagle — random passes across the page ───────────────────
+  const eagle = document.getElementById('eagle');
+  if (eagle && !reduceMotion) {
+    const fly = () => {
+      const goingRight = Math.random() < 0.5;
+      const yStart = 80 + Math.random() * (window.innerHeight * 0.4);
+      const yEnd = yStart + (Math.random() - 0.5) * 80;
+      const dur = 14000 + Math.random() * 9000;
+      eagle.style.top = `${yStart}px`;
+      eagle.style.setProperty('--y-end', `${yEnd}px`);
+      eagle.style.setProperty('--y-start', `${yStart}px`);
+      eagle.style.setProperty('--dur', `${dur}ms`);
+      eagle.classList.remove('is-flying-l', 'is-flying-r');
+      void eagle.offsetWidth;
+      eagle.classList.add(goingRight ? 'is-flying-r' : 'is-flying-l');
+      setTimeout(fly, dur + 18000 + Math.random() * 24000);
+    };
+    setTimeout(fly, 6000 + Math.random() * 4000);
+  }
+
+  // ─── Snow layer ────────────────────────────────────────────────────
+  const snowLayer = document.getElementById('snow-layer');
+  if (snowLayer && !reduceMotion) {
+    for (let i = 0; i < 30; i++) {
+      const f = document.createElement('span');
+      f.className = 'snowflake';
+      f.style.left = `${Math.random() * 100}vw`;
+      f.style.setProperty('--dur', `${10 + Math.random() * 16}s`);
+      f.style.setProperty('--delay', `${-Math.random() * 18}s`);
+      f.style.setProperty('--drift', `${(Math.random() - 0.5) * 80}px`);
+      f.style.setProperty('--size', `${2 + Math.random() * 3}px`);
+      snowLayer.appendChild(f);
+    }
+  }
+
+  // ─── Konami code → horse gallops ───────────────────────────────────
+  const horse = document.getElementById('horse-gallop');
+  const sequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let pos = 0;
+  window.addEventListener('keydown', (e) => {
+    const want = sequence[pos];
+    const got = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (got === want) {
+      pos++;
+      if (pos === sequence.length) {
+        pos = 0;
+        if (horse && !reduceMotion) {
+          horse.classList.remove('is-galloping');
+          void horse.offsetWidth;
+          horse.classList.add('is-galloping');
+        }
+        playChime(523, 0.04, 0.18); // C5
+        setTimeout(() => playChime(659, 0.04, 0.18), 120); // E5
+        setTimeout(() => playChime(784, 0.04, 0.22), 240); // G5
+      }
+    } else {
+      pos = got === sequence[0] ? 1 : 0;
+    }
+  });
+
+  // ─── Web Audio: subtle chimes for key interactions ──────────────────
+  let audioCtx: AudioContext | null = null;
+  const ensureAudio = () => {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)(); }
+      catch { return null; }
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  };
+  const playChime = (freq: number, vol = 0.05, dur = 0.4) => {
+    const ctx = ensureAudio();
+    if (!ctx) return;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = freq;
+    g.gain.value = 0;
+    g.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+    o.connect(g).connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + dur);
+  };
+  // expose on window for cross-component triggers
+  (window as any).__playChime = playChime;
+
+  // Subtle audio feedback on key interactions (only after a user gesture)
+  let userGestured = false;
+  const markGesture = () => { userGestured = true; };
+  window.addEventListener('pointerdown', markGesture, { once: true, passive: true });
+  window.addEventListener('keydown', markGesture, { once: true });
+
+  // Wax seal click → soft thud + chime
+  document.querySelectorAll('[data-wax-seal]').forEach((seal) => {
+    seal.addEventListener('click', () => {
+      if (!userGestured) return;
+      playChime(180, 0.07, 0.18);
+      setTimeout(() => playChime(440, 0.04, 0.32), 80);
+    });
+  });
+
+  // RSVP submit → triumphant chord
+  const rsvpForm = document.getElementById('rsvp-form');
+  rsvpForm?.addEventListener('submit', () => {
+    if (!userGestured) return;
+    if (!(rsvpForm as HTMLFormElement).checkValidity()) return;
+    [523, 659, 784].forEach((f, i) => setTimeout(() => playChime(f, 0.05, 0.6), i * 120));
+  });
+
+  // Ampersand click → tiny twinkle
+  document.querySelectorAll('[data-easter-amp]').forEach((amp) => {
+    amp.addEventListener('click', () => {
+      if (!userGestured) return;
+      playChime(880 + Math.random() * 200, 0.03, 0.18);
+    });
+  });
+
+  // ─── Idle sparkles around interactive elements ──────────────────────
+  if (!reduceMotion) {
+    let idleTimer = 0;
+    let sparkleTimer = 0;
+    const SPARKLE_TARGETS = '[data-magnetic], [data-wax-seal], [data-easter-amp], [data-countdown]';
+    const startSparkles = () => {
+      stopSparkles();
+      sparkleTimer = window.setInterval(() => {
+        const targets = document.querySelectorAll<HTMLElement>(SPARKLE_TARGETS);
+        if (targets.length === 0) return;
+        const target = targets[Math.floor(Math.random() * targets.length)];
+        const r = target.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > window.innerHeight) return;
+        const sp = document.createElement('span');
+        sp.className = 'idle-sparkle';
+        sp.style.left = `${r.left + Math.random() * r.width}px`;
+        sp.style.top = `${r.top + Math.random() * r.height}px`;
+        document.body.appendChild(sp);
+        setTimeout(() => sp.remove(), 1400);
+      }, 700);
+    };
+    const stopSparkles = () => {
+      if (sparkleTimer) { clearInterval(sparkleTimer); sparkleTimer = 0; }
+    };
+    const armIdle = () => {
+      clearTimeout(idleTimer);
+      stopSparkles();
+      idleTimer = window.setTimeout(startSparkles, 14000);
+    };
+    armIdle();
+    ['mousemove', 'pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) =>
+      window.addEventListener(ev, armIdle, { passive: true })
+    );
+  }
+</script>
+
+<style is:global>
+  /* ─── Eagle ──────────────────────────────────────────────────────────── */
+  .eagle {
+    position: fixed; left: -120px;
+    width: 80px; height: 30px;
+    pointer-events: none;
+    opacity: 0; z-index: 4;
+    will-change: transform, opacity;
+  }
+  .eagle.is-flying-r {
+    animation: eagle-fly-r var(--dur, 18s) linear forwards;
+  }
+  .eagle.is-flying-l {
+    animation: eagle-fly-l var(--dur, 18s) linear forwards;
+  }
+  @keyframes eagle-fly-r {
+    0%   { transform: translate(0, 0) scaleX(1); opacity: 0; }
+    8%   { opacity: 0.75; }
+    50%  { transform: translate(50vw, calc((var(--y-end) - var(--y-start)) * 0.5)); }
+    92%  { opacity: 0.75; }
+    100% { transform: translate(calc(100vw + 200px), calc(var(--y-end) - var(--y-start))) scaleX(1); opacity: 0; }
+  }
+  @keyframes eagle-fly-l {
+    0%   { transform: translate(calc(100vw + 200px), 0) scaleX(-1); opacity: 0; }
+    8%   { opacity: 0.75; }
+    100% { transform: translate(-200px, calc(var(--y-end) - var(--y-start))) scaleX(-1); opacity: 0; }
+  }
+  .eagle-svg { width: 100%; height: 100%; opacity: 0.6; }
+  .eagle .eagle-body { animation: eagle-flap 0.55s ease-in-out infinite; transform-origin: 50% 50%; }
+  @keyframes eagle-flap {
+    0%, 100% { transform: scaleY(1); }
+    50%      { transform: scaleY(0.55); }
+  }
+
+  /* ─── Snow over Kazbek ───────────────────────────────────────────────── */
+  .snow-layer {
+    position: fixed; inset: 0; pointer-events: none;
+    z-index: 3; overflow: hidden;
+  }
+  .snowflake {
+    position: absolute; top: -20px;
+    width: var(--size, 3px); height: var(--size, 3px);
+    border-radius: 50%;
+    background: rgba(248,241,227,0.7);
+    box-shadow: 0 0 4px rgba(248,241,227,0.5);
+    animation: snow-fall var(--dur, 14s) linear infinite;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
+  }
+  @keyframes snow-fall {
+    0%   { transform: translate3d(0, 0vh, 0); opacity: 0; }
+    10%  { opacity: 0.9; }
+    50%  { transform: translate3d(calc(var(--drift, 40px) * 1), 50vh, 0); opacity: 0.6; }
+    100% { transform: translate3d(calc(var(--drift, 40px) * -0.4), 110vh, 0); opacity: 0; }
+  }
+
+  /* ─── Konami horse gallop ────────────────────────────────────────────── */
+  .horse-gallop {
+    position: fixed; left: -240px; bottom: 8vh;
+    width: 200px; height: 80px;
+    pointer-events: none; z-index: 92;
+    opacity: 0;
+    will-change: transform;
+  }
+  .horse-gallop.is-galloping {
+    animation: horse-canter 4.6s cubic-bezier(.4,.05,.6,.95) forwards;
+  }
+  @keyframes horse-canter {
+    0%   { transform: translate(0, 20px); opacity: 0; }
+    8%   { opacity: 1; }
+    50%  { transform: translate(50vw, 0); }
+    92%  { opacity: 1; }
+    100% { transform: translate(calc(100vw + 240px), 20px); opacity: 0; }
+  }
+  .horse-svg { width: 100%; height: 100%; }
+  .horse-gallop.is-galloping .horse-svg {
+    animation: horse-bounce 0.4s ease-in-out infinite;
+  }
+  @keyframes horse-bounce {
+    0%, 100% { transform: translateY(0) skewX(-2deg); }
+    50%      { transform: translateY(-6px) skewX(2deg); }
+  }
+
+  /* ─── Idle sparkles ───────────────────────────────────────────────────── */
+  .idle-sparkle {
+    position: fixed; width: 10px; height: 10px;
+    pointer-events: none; z-index: 50;
+    background-image:
+      linear-gradient(currentColor, currentColor),
+      linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px, 1px 100%;
+    background-position: 50% 50%, 50% 50%;
+    background-repeat: no-repeat;
+    color: #B85C3C;
+    animation: idle-sparkle-anim 1300ms cubic-bezier(.4,0,.6,1) forwards;
+    transform-origin: center;
+  }
+  @keyframes idle-sparkle-anim {
+    0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
+    25%  { opacity: 1; transform: scale(1.2) rotate(45deg); }
+    100% { opacity: 0; transform: scale(0.6) rotate(120deg); }
+  }
+</style>

@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import EnvelopeIntro from '../components/EnvelopeIntro.astro';
+import Atmosphere from '../components/Atmosphere.astro';
 export interface Props {
   title?: string;
   description?: string;
@@ -29,8 +31,24 @@ const {
     />
   </head>
   <body class="relative">
-    <!-- Floating petals layer (decorative) -->
+    <EnvelopeIntro />
+    <Atmosphere />
+
+    <!-- Calligraphy cursor + ink trail (hover devices only) -->
+    <div id="ink-cursor" class="ink-cursor" aria-hidden="true">
+      <svg viewBox="0 0 28 28" class="ink-nib" aria-hidden="true">
+        <path d="M14 4 L 22 22 L 14 18 L 6 22 Z" fill="#1A1410" />
+        <path d="M14 4 L 14 18" stroke="#F8F1E3" stroke-width="0.6" />
+        <circle cx="14" cy="20" r="1.6" fill="#B85C3C" />
+      </svg>
+    </div>
+    <canvas id="ink-trail" class="ink-trail" aria-hidden="true"></canvas>
+
+    <!-- Floating petals layer (decorative, cursor-reactive) -->
     <div class="petals-layer" id="petals-layer" aria-hidden="true"></div>
+
+    <!-- Confetti canvas (easter egg) -->
+    <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
     <!-- Page-section marginalia indicator -->
     <nav class="page-marker" aria-label="Разделы">
@@ -38,8 +56,9 @@ const {
         <li><a href="#hero" class="page-marker-item" data-target="hero"><span class="pm-label">Приглашение</span><span class="pm-tick"></span><span>I</span></a></li>
         <li><a href="#format" class="page-marker-item" data-target="format"><span class="pm-label">Формат</span><span class="pm-tick"></span><span>II</span></a></li>
         <li><a href="#schedule" class="page-marker-item" data-target="schedule"><span class="pm-label">Программа</span><span class="pm-tick"></span><span>III</span></a></li>
-        <li><a href="#rsvp" class="page-marker-item" data-target="rsvp"><span class="pm-label">RSVP</span><span class="pm-tick"></span><span>IV</span></a></li>
-        <li><a href="#contacts" class="page-marker-item" data-target="contacts"><span class="pm-label">Контакты</span><span class="pm-tick"></span><span>V</span></a></li>
+        <li><a href="#guestbook" class="page-marker-item" data-target="guestbook"><span class="pm-label">Книга</span><span class="pm-tick"></span><span>IV</span></a></li>
+        <li><a href="#rsvp" class="page-marker-item" data-target="rsvp"><span class="pm-label">RSVP</span><span class="pm-tick"></span><span>V</span></a></li>
+        <li><a href="#contacts" class="page-marker-item" data-target="contacts"><span class="pm-label">Контакты</span><span class="pm-tick"></span><span>VI</span></a></li>
       </ol>
     </nav>
 
@@ -47,6 +66,7 @@ const {
 
     <script>
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hoverDevice = window.matchMedia('(hover: hover)').matches && window.innerWidth >= 768;
 
       // ─── Reveal on scroll ──────────────────────────────────────────────
       const io = new IntersectionObserver(
@@ -61,6 +81,15 @@ const {
         { threshold: 0.12 }
       );
       document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // ─── Mouse position tracking (shared) ──────────────────────────────
+      const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
+      const onPointerMove = (e: MouseEvent) => {
+        pointer.x = e.clientX;
+        pointer.y = e.clientY;
+        pointer.active = true;
+      };
+      window.addEventListener('mousemove', onPointerMove, { passive: true });
 
       // ─── Mouse parallax ────────────────────────────────────────────────
       if (!reduceMotion) {
@@ -94,7 +123,6 @@ const {
           for (const root of scrollRoots) {
             const rect = root.getBoundingClientRect();
             const wh = window.innerHeight;
-            // 0 when far above, 1 when fully scrolled past
             const progress = Math.max(0, Math.min(1, (wh - rect.top) / (wh + rect.height)));
             root.style.setProperty('--sy', progress.toFixed(3));
           }
@@ -104,7 +132,7 @@ const {
       }
 
       // ─── 3D tilt cards ────────────────────────────────────────────────
-      if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+      if (!reduceMotion && hoverDevice) {
         document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
           let rect: DOMRect | null = null;
           const onEnter = () => { rect = card.getBoundingClientRect(); card.classList.add('is-tilting'); };
@@ -128,7 +156,7 @@ const {
       }
 
       // ─── Magnetic button ──────────────────────────────────────────────
-      if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+      if (!reduceMotion && hoverDevice) {
         document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((btn) => {
           const strength = Number(btn.dataset.magnetic) || 14;
           const onMove = (e: MouseEvent) => {
@@ -166,19 +194,20 @@ const {
           for (const s of sections) {
             s.item.classList.toggle('is-active', s === active);
           }
-          // reveal after passing hero
           marker.classList.toggle('is-shown', window.scrollY > window.innerHeight * 0.6);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
       }
 
-      // ─── Petals layer ─────────────────────────────────────────────────
+      // ─── Petals layer (cursor-reactive) ───────────────────────────────
+      type PetalState = { el: HTMLElement; vx: number; vy: number; offX: number; offY: number };
+      const petalStates: PetalState[] = [];
       if (!reduceMotion) {
         const layer = document.getElementById('petals-layer');
         if (layer) {
           const variants = ['', 'leaf', 'gold'];
-          const count = window.innerWidth < 768 ? 6 : 14;
+          const count = window.innerWidth < 768 ? 8 : 18;
           for (let i = 0; i < count; i++) {
             const p = document.createElement('span');
             p.className = `petal ${variants[i % variants.length]}`;
@@ -191,6 +220,35 @@ const {
             p.style.setProperty('--delay', `${delay}s`);
             p.style.setProperty('--drift', `${drift}px`);
             layer.appendChild(p);
+            petalStates.push({ el: p, vx: 0, vy: 0, offX: 0, offY: 0 });
+          }
+
+          // Cursor-reactive petals — push away when cursor near
+          if (hoverDevice) {
+            const tickPetals = () => {
+              petalStates.forEach((s) => {
+                const r = s.el.getBoundingClientRect();
+                const cx = r.left + r.width / 2;
+                const cy = r.top + r.height / 2;
+                const dx = cx - pointer.x;
+                const dy = cy - pointer.y;
+                const dist2 = dx * dx + dy * dy;
+                const RADIUS = 110;
+                if (dist2 < RADIUS * RADIUS && pointer.active) {
+                  const dist = Math.sqrt(dist2) || 1;
+                  const force = (1 - dist / RADIUS) * 6;
+                  s.vx += (dx / dist) * force;
+                  s.vy += (dy / dist) * force * 0.6;
+                }
+                s.vx *= 0.86; s.vy *= 0.86;
+                s.offX += s.vx; s.offY += s.vy;
+                s.offX *= 0.92; s.offY *= 0.92;
+                s.el.style.setProperty('--ox', `${s.offX.toFixed(1)}px`);
+                s.el.style.setProperty('--oy', `${s.offY.toFixed(1)}px`);
+              });
+              requestAnimationFrame(tickPetals);
+            };
+            requestAnimationFrame(tickPetals);
           }
         }
       }
@@ -225,23 +283,18 @@ const {
           s: cd.querySelector<HTMLElement>('[data-cd="s"]'),
         };
         const last: Record<string, string> = { d: '', h: '', m: '', s: '' };
-
         const setTile = (key: 'd' | 'h' | 'm' | 's', val: string) => {
           const el = tiles[key];
           if (!el) return;
           if (last[key] === val) return;
           last[key] = val;
-          if (reduceMotion) {
-            el.textContent = val;
-            return;
-          }
+          if (reduceMotion) { el.textContent = val; return; }
           el.classList.add('is-ticking');
           setTimeout(() => {
             el.textContent = val;
             el.classList.remove('is-ticking');
           }, 280);
         };
-
         const update = () => {
           const now = Date.now();
           const diff = Math.max(0, target - now);
@@ -256,6 +309,192 @@ const {
         };
         update();
         setInterval(update, 1000);
+      }
+
+      // ─── Calligraphy cursor + ink trail ───────────────────────────────
+      if (!reduceMotion && hoverDevice) {
+        const cursor = document.getElementById('ink-cursor');
+        const canvas = document.getElementById('ink-trail') as HTMLCanvasElement | null;
+        if (cursor && canvas) {
+          const ctx = canvas.getContext('2d')!;
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const resize = () => {
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.scale(dpr, dpr);
+          };
+          resize();
+          window.addEventListener('resize', resize);
+
+          document.body.classList.add('has-ink-cursor');
+
+          type Drop = { x: number; y: number; r: number; a: number; vx: number; vy: number };
+          const drops: Drop[] = [];
+          let lastX = pointer.x, lastY = pointer.y;
+
+          const onMove = () => {
+            const dx = pointer.x - lastX;
+            const dy = pointer.y - lastY;
+            const speed = Math.hypot(dx, dy);
+            if (speed > 1.4) {
+              const count = Math.min(3, Math.ceil(speed / 14));
+              for (let i = 0; i < count; i++) {
+                drops.push({
+                  x: pointer.x + (Math.random() - 0.5) * 4,
+                  y: pointer.y + (Math.random() - 0.5) * 4,
+                  r: 1.5 + Math.random() * 2.5,
+                  a: 0.6 + Math.random() * 0.3,
+                  vx: dx * 0.04 + (Math.random() - 0.5) * 0.6,
+                  vy: dy * 0.04 + (Math.random() - 0.5) * 0.6,
+                });
+              }
+            }
+            lastX = pointer.x; lastY = pointer.y;
+            cursor.style.transform = `translate(${pointer.x}px, ${pointer.y}px) rotate(${Math.atan2(dy, dx) * 180 / Math.PI + 45}deg)`;
+            if (drops.length > 220) drops.splice(0, drops.length - 220);
+          };
+          window.addEventListener('mousemove', onMove, { passive: true });
+
+          const draw = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = drops.length - 1; i >= 0; i--) {
+              const d = drops[i];
+              d.x += d.vx; d.y += d.vy;
+              d.vx *= 0.94; d.vy *= 0.94;
+              d.r *= 0.985;
+              d.a *= 0.96;
+              ctx.beginPath();
+              ctx.fillStyle = `rgba(26, 20, 16, ${d.a.toFixed(3)})`;
+              ctx.arc(d.x, d.y, Math.max(0.1, d.r), 0, Math.PI * 2);
+              ctx.fill();
+              if (d.a < 0.02 || d.r < 0.3) drops.splice(i, 1);
+            }
+            requestAnimationFrame(draw);
+          };
+          requestAnimationFrame(draw);
+
+          // Hide cursor when over interactive controls (revert to default)
+          document.addEventListener('mouseover', (e) => {
+            const t = e.target as HTMLElement;
+            const isInteractive = t.closest('a, button, input, textarea, select, label[for], [role="button"]');
+            cursor.classList.toggle('is-pointing', !!isInteractive);
+          });
+
+          // Hide entirely when leaving window
+          document.addEventListener('mouseleave', () => cursor.classList.add('is-hidden'));
+          document.addEventListener('mouseenter', () => cursor.classList.remove('is-hidden'));
+        }
+      }
+
+      // ─── Easter egg: click "&" between names 7 times → confetti ───────
+      const confettiCanvas = document.getElementById('confetti-canvas') as HTMLCanvasElement | null;
+      const fireConfetti = () => {
+        if (!confettiCanvas) return;
+        const ctx = confettiCanvas.getContext('2d')!;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        confettiCanvas.width = window.innerWidth * dpr;
+        confettiCanvas.height = window.innerHeight * dpr;
+        confettiCanvas.style.width = window.innerWidth + 'px';
+        confettiCanvas.style.height = window.innerHeight + 'px';
+        ctx.scale(dpr, dpr);
+        confettiCanvas.classList.add('is-active');
+        const colors = ['#B85C3C', '#A8873E', '#6F7B66', '#D9A897', '#1A1410', '#F8F1E3'];
+        type C = { x: number; y: number; vx: number; vy: number; a: number; rot: number; vr: number; size: number; color: string; shape: 'rect' | 'circle' };
+        const pieces: C[] = [];
+        const w = window.innerWidth, h = window.innerHeight;
+        for (let i = 0; i < 220; i++) {
+          pieces.push({
+            x: w / 2 + (Math.random() - 0.5) * 80,
+            y: h / 2,
+            vx: (Math.random() - 0.5) * 14,
+            vy: -(Math.random() * 14 + 6),
+            a: 1,
+            rot: Math.random() * Math.PI * 2,
+            vr: (Math.random() - 0.5) * 0.3,
+            size: 4 + Math.random() * 6,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            shape: Math.random() < 0.5 ? 'rect' : 'circle',
+          });
+        }
+        const tick = () => {
+          ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          let alive = false;
+          for (const p of pieces) {
+            p.vy += 0.3;
+            p.x += p.vx; p.y += p.vy;
+            p.rot += p.vr;
+            p.a *= 0.99;
+            if (p.y < h + 40 && p.a > 0.02) {
+              alive = true;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rot);
+              ctx.globalAlpha = p.a;
+              ctx.fillStyle = p.color;
+              if (p.shape === 'rect') {
+                ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+              } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.restore();
+            }
+          }
+          if (alive) requestAnimationFrame(tick);
+          else {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiCanvas.classList.remove('is-active');
+          }
+        };
+        requestAnimationFrame(tick);
+      };
+
+      let ampClicks = 0;
+      let ampTimer = 0;
+      document.querySelectorAll<HTMLElement>('[data-easter-amp]').forEach((amp) => {
+        amp.style.cursor = 'pointer';
+        amp.addEventListener('click', () => {
+          ampClicks++;
+          amp.style.transform = `scale(${1 + ampClicks * 0.04}) rotate(${ampClicks * 6 - 18}deg)`;
+          amp.style.transition = 'transform 250ms cubic-bezier(.2,.6,.2,1)';
+          clearTimeout(ampTimer);
+          ampTimer = window.setTimeout(() => {
+            ampClicks = 0;
+            amp.style.transform = '';
+          }, 1800);
+          if (ampClicks >= 7) {
+            ampClicks = 0;
+            amp.style.transform = '';
+            fireConfetti();
+          }
+        });
+      });
+
+      // ─── RSVP letter flight on submit ─────────────────────────────────
+      const rsvpForm = document.getElementById('rsvp-form');
+      const rsvpThanks = document.getElementById('rsvp-thanks');
+      if (rsvpForm && rsvpThanks) {
+        rsvpForm.addEventListener('submit', () => {
+          // Only trigger flight if form is valid (browser-validated)
+          if (!(rsvpForm as HTMLFormElement).checkValidity()) return;
+          const rect = rsvpForm.getBoundingClientRect();
+          const flight = document.createElement('div');
+          flight.className = 'rsvp-flight';
+          flight.style.left = `${rect.left + rect.width / 2 - 60}px`;
+          flight.style.top = `${rect.top + rect.height / 2 - 40}px`;
+          flight.innerHTML = `
+            <div class="rsvp-flight-envelope">
+              <div class="rsvp-flight-back"></div>
+              <div class="rsvp-flight-flap"></div>
+              <div class="rsvp-flight-seal"></div>
+            </div>
+          `;
+          document.body.appendChild(flight);
+          setTimeout(() => flight.remove(), 2400);
+        });
       }
     </script>
   </body>

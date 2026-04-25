@@ -1,0 +1,352 @@
+---
+// Cinematic envelope intro — plays on first visit (sessionStorage gated).
+// Press / tap / scroll to skip.
+---
+<div id="envelope-intro" class="env-intro" aria-hidden="true">
+  <button
+    type="button"
+    id="envelope-skip"
+    class="env-skip"
+    aria-label="Пропустить заставку"
+  >
+    Пропустить →
+  </button>
+
+  <div class="env-stage">
+    <!-- The envelope -->
+    <div class="env-envelope" id="env-envelope">
+      <!-- back panel -->
+      <div class="env-back"></div>
+      <!-- letter inside -->
+      <div class="env-letter">
+        <div class="env-letter-grain"></div>
+        <p class="env-letter-eyebrow">Приглашение</p>
+        <p class="env-letter-names">
+          <span>Дана</span>
+          <span class="env-amp">&amp;</span>
+          <span>Александр</span>
+        </p>
+        <p class="env-letter-date">XIX · IX · MMXXVI</p>
+        <p class="env-letter-place">Владикавказ · под взглядом Казбека</p>
+      </div>
+      <!-- front flap (with seal) -->
+      <div class="env-flap">
+        <div class="env-seal" id="env-seal" aria-hidden="true">
+          <div class="env-seal-inner">
+            <span class="env-seal-d">Д</span>
+            <span class="env-seal-amp">&amp;</span>
+            <span class="env-seal-a">А</span>
+          </div>
+          <div class="env-seal-crack"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="env-hint" id="env-hint">нажмите, чтобы открыть</p>
+  </div>
+</div>
+
+<script>
+  const intro = document.getElementById('envelope-intro');
+  if (!intro) {
+    /* nothing */
+  } else {
+    const seen = sessionStorage.getItem('env-intro-seen');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduceMotion) {
+      intro.remove();
+    } else {
+      document.documentElement.classList.add('env-locked');
+      const seal = document.getElementById('env-seal');
+      const skip = document.getElementById('envelope-skip');
+      const envelope = document.getElementById('env-envelope');
+      const hint = document.getElementById('env-hint');
+
+      let opened = false;
+      const open = () => {
+        if (opened) return;
+        opened = true;
+        sessionStorage.setItem('env-intro-seen', '1');
+        intro.classList.add('is-opening');
+        hint?.remove();
+        // Stage 1: crack seal, lift flap
+        // Stage 2: letter rises and zooms toward camera
+        // Stage 3: fade out overlay
+        setTimeout(() => intro.classList.add('is-zoomed'), 900);
+        setTimeout(() => intro.classList.add('is-gone'), 1900);
+        setTimeout(() => {
+          intro.remove();
+          document.documentElement.classList.remove('env-locked');
+        }, 2600);
+      };
+
+      const skipNow = () => {
+        if (opened) return;
+        opened = true;
+        sessionStorage.setItem('env-intro-seen', '1');
+        intro.classList.add('is-gone');
+        setTimeout(() => {
+          intro.remove();
+          document.documentElement.classList.remove('env-locked');
+        }, 600);
+      };
+
+      seal?.addEventListener('click', open);
+      envelope?.addEventListener('click', open);
+      skip?.addEventListener('click', (e) => { e.stopPropagation(); skipNow(); });
+      window.addEventListener('keydown', (e) => {
+        if (opened) return;
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+        if (e.key === 'Escape') skipNow();
+      });
+      // Auto-open after 5s if user does nothing
+      setTimeout(() => { if (!opened) open(); }, 5500);
+    }
+  }
+</script>
+
+<style is:global>
+  html.env-locked, html.env-locked body { overflow: hidden; }
+
+  .env-intro {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 50% 40%, #2A1F18 0%, #14100C 70%);
+    cursor: pointer;
+    overflow: hidden;
+    animation: env-bg-in 600ms ease both;
+  }
+  @keyframes env-bg-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .env-intro.is-gone {
+    opacity: 0;
+    transition: opacity 600ms ease;
+    pointer-events: none;
+  }
+
+  .env-intro::before {
+    /* warm vignette + grain */
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 30% 30%, rgba(184,92,60,0.12), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(168,135,62,0.10), transparent 55%);
+    pointer-events: none;
+  }
+  .env-intro::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.7 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+  }
+
+  .env-skip {
+    position: absolute; top: 1.5rem; right: 1.5rem; z-index: 4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(248,241,227,0.55);
+    background: transparent; border: none; padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+  .env-skip:hover { color: #F8F1E3; }
+
+  .env-stage {
+    position: relative;
+    width: min(560px, 92vw);
+    aspect-ratio: 16 / 11;
+    perspective: 1600px;
+    transform: scale(0.96); opacity: 0;
+    animation: env-stage-in 900ms cubic-bezier(.2,.6,.2,1) 200ms both;
+  }
+  @keyframes env-stage-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .env-envelope {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 1100ms cubic-bezier(.55,.05,.25,1);
+  }
+  .env-intro.is-opening .env-envelope {
+    transform: translateY(-2%) scale(1.02);
+  }
+  .env-intro.is-zoomed .env-envelope {
+    transform: translateY(-6%) scale(1.08);
+  }
+
+  .env-back {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, #E8D5B2, #C9A878);
+    box-shadow:
+      inset 0 0 0 1px rgba(0,0,0,0.18),
+      inset 0 -20px 40px rgba(0,0,0,0.18),
+      0 30px 60px -20px rgba(0,0,0,0.55);
+    border-radius: 2px;
+  }
+  .env-back::before {
+    /* paper texture */
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0 2px, transparent 2px 6px);
+    opacity: 0.6;
+  }
+
+  .env-letter {
+    position: absolute;
+    left: 8%; right: 8%; top: 14%; bottom: 26%;
+    background:
+      linear-gradient(180deg, #F8F1E3, #EFE3CC);
+    border: 1px solid rgba(26,20,16,0.18);
+    box-shadow: 0 10px 24px -16px rgba(0,0,0,0.4);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    transform: translateY(0) scale(1);
+    transition: transform 1200ms cubic-bezier(.2,.6,.2,1);
+    z-index: 1;
+  }
+  .env-intro.is-opening .env-letter {
+    transform: translateY(-12%) scale(1.05);
+  }
+  .env-intro.is-zoomed .env-letter {
+    transform: translateY(-30%) scale(1.45);
+  }
+  .env-letter-grain {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.18; mix-blend-mode: multiply;
+  }
+  .env-letter-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: #5E4F43; margin-bottom: 0.75rem;
+  }
+  .env-letter-names {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 5.5vw, 3.4rem); line-height: 1;
+    color: #1A1410; display: inline-flex; gap: 0.5rem; align-items: baseline;
+  }
+  .env-letter-names .env-amp {
+    font-style: italic; color: #B85C3C;
+  }
+  .env-letter-date {
+    margin-top: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.4em; color: #5E4F43;
+  }
+  .env-letter-place {
+    margin-top: 0.4rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 0.95rem; color: #5E4F43;
+  }
+
+  .env-flap {
+    position: absolute; left: 0; right: 0; top: 0;
+    height: 70%;
+    background:
+      linear-gradient(180deg, #E2C893, #BD9560);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    box-shadow: inset 0 -12px 20px rgba(0,0,0,0.18);
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    transition: transform 900ms cubic-bezier(.55,.05,.2,1);
+    z-index: 2;
+  }
+  .env-flap::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0 2px, transparent 2px 6px);
+  }
+  .env-intro.is-opening .env-flap {
+    transform: rotateX(-180deg);
+  }
+  .env-intro.is-zoomed .env-flap {
+    opacity: 0;
+    transition: transform 900ms cubic-bezier(.55,.05,.2,1), opacity 500ms ease 400ms;
+  }
+
+  .env-seal {
+    position: absolute;
+    left: 50%; bottom: -22%;
+    width: 26%; aspect-ratio: 1;
+    transform: translateX(-50%) rotate(-6deg);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #C16A45, #8C4A2F 60%, #5E2F1C);
+    box-shadow:
+      0 8px 18px -8px rgba(0,0,0,0.6),
+      inset 0 -8px 14px rgba(0,0,0,0.4),
+      inset 0 4px 8px rgba(255,255,255,0.18);
+    cursor: pointer;
+    transition: transform 280ms cubic-bezier(.2,.6,.2,1);
+  }
+  .env-seal:hover {
+    transform: translateX(-50%) rotate(-10deg) scale(1.05);
+  }
+  .env-seal::before {
+    /* wax drips */
+    content: ""; position: absolute; left: 50%; top: 90%;
+    width: 110%; height: 30%;
+    transform: translateX(-50%);
+    background:
+      radial-gradient(ellipse at 20% 0%, #8C4A2F 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 0%, #8C4A2F 0%, transparent 40%);
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .env-seal-inner {
+    position: absolute; inset: 8%;
+    border: 1px solid rgba(248,241,227,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #F8F1E3;
+    font-family: 'Instrument Serif', serif;
+    gap: 0.15rem;
+    transition: opacity 400ms ease;
+  }
+  .env-seal-d, .env-seal-a { font-size: clamp(1rem, 2.4vw, 1.6rem); font-style: italic; }
+  .env-seal-amp { font-size: 0.5rem; letter-spacing: 0.3em; opacity: 0.8; }
+
+  .env-seal-crack {
+    position: absolute; inset: 0; border-radius: 50%;
+    background:
+      linear-gradient(45deg, transparent 48%, rgba(0,0,0,0.55) 49%, rgba(0,0,0,0.55) 51%, transparent 52%),
+      linear-gradient(135deg, transparent 48%, rgba(0,0,0,0.45) 49%, rgba(0,0,0,0.45) 51%, transparent 52%);
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+  }
+
+  .env-intro.is-opening .env-seal {
+    animation: env-seal-crack 600ms cubic-bezier(.36,.07,.19,.97) both;
+  }
+  .env-intro.is-opening .env-seal-crack { opacity: 1; }
+  .env-intro.is-opening .env-seal-inner { opacity: 0.4; }
+
+  @keyframes env-seal-crack {
+    0%   { transform: translateX(-50%) rotate(-6deg) scale(1); }
+    25%  { transform: translateX(-52%) rotate(-2deg) scale(1.05); }
+    35%  { transform: translateX(-48%) rotate(-10deg) scale(0.96); }
+    55%  { transform: translateX(-51%) rotate(-4deg) scale(1.02); }
+    100% { transform: translateX(-50%) rotate(-90deg) scale(0.6); opacity: 0; }
+  }
+
+  .env-hint {
+    position: absolute; bottom: -2.5rem; left: 50%; transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(248,241,227,0.55);
+    animation: env-hint-pulse 2.4s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  @keyframes env-hint-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.85; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .env-intro { display: none; }
+  }
+</style>

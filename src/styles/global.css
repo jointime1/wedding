@@ -247,6 +247,9 @@
     animation-delay: var(--delay, 0s);
     transform-origin: center;
     filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    /* cursor-reactive offset injected via JS */
+    translate: var(--ox, 0) var(--oy, 0);
+    transition: translate 350ms cubic-bezier(.2,.6,.2,1);
   }
   .petal.leaf {
     background: radial-gradient(ellipse at 30% 30%, #A8B89C, #6F7B66 70%, #4E5946);
@@ -259,6 +262,74 @@
     8%   { opacity: 0.6; }
     50%  { transform: translate3d(calc(var(--drift, 60px) * 1), 50vh, 0) rotate(180deg); opacity: 0.55; }
     100% { transform: translate3d(calc(var(--drift, 60px) * -0.4), 110vh, 0) rotate(360deg); opacity: 0; }
+  }
+
+  /* ─── Calligraphy ink cursor ──────────────────────────────────────────── */
+  .ink-cursor {
+    position: fixed; top: 0; left: 0; width: 28px; height: 28px;
+    pointer-events: none; z-index: 90;
+    transform: translate(-9999px, -9999px);
+    transition: opacity 200ms ease;
+    will-change: transform;
+    margin-left: -3px; margin-top: -3px;
+  }
+  .ink-cursor .ink-nib {
+    width: 28px; height: 28px;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+    transition: transform 200ms ease, filter 200ms ease;
+  }
+  .ink-cursor.is-pointing { opacity: 0; }
+  .ink-cursor.is-hidden { opacity: 0; }
+  .has-ink-cursor { cursor: none; }
+  .has-ink-cursor a, .has-ink-cursor button, .has-ink-cursor input,
+  .has-ink-cursor textarea, .has-ink-cursor select, .has-ink-cursor label[for],
+  .has-ink-cursor [role="button"] { cursor: pointer; }
+  .has-ink-cursor input[type="text"], .has-ink-cursor textarea { cursor: text; }
+  .ink-trail {
+    position: fixed; inset: 0; pointer-events: none;
+    z-index: 89;
+    mix-blend-mode: multiply;
+  }
+
+  /* ─── Confetti canvas ─────────────────────────────────────────────────── */
+  .confetti-canvas {
+    position: fixed; inset: 0; pointer-events: none;
+    z-index: 95;
+    opacity: 0;
+  }
+  .confetti-canvas.is-active { opacity: 1; }
+
+  /* ─── RSVP envelope flight ────────────────────────────────────────────── */
+  .rsvp-flight {
+    position: fixed; z-index: 80;
+    width: 120px; height: 80px;
+    pointer-events: none;
+    animation: rsvp-flight-anim 2200ms cubic-bezier(.5,.05,.25,1) forwards;
+    transform-origin: center;
+    perspective: 800px;
+  }
+  @keyframes rsvp-flight-anim {
+    0%   { transform: translate(0,0) rotate(-2deg) scale(0.6); opacity: 0; }
+    15%  { transform: translate(0,-10px) rotate(0deg) scale(1); opacity: 1; }
+    40%  { transform: translate(-30px,-80px) rotate(-12deg) scale(1.05); opacity: 1; }
+    100% { transform: translate(60vw,-110vh) rotate(35deg) scale(0.4); opacity: 0; }
+  }
+  .rsvp-flight-envelope {
+    position: relative; width: 100%; height: 100%;
+    background: linear-gradient(180deg, #E8D5B2, #C9A878);
+    box-shadow: 0 12px 24px -12px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(0,0,0,0.18);
+  }
+  .rsvp-flight-flap {
+    position: absolute; left: 0; right: 0; top: 0; height: 60%;
+    background: linear-gradient(180deg, #E2C893, #BD9560);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    box-shadow: inset 0 -10px 16px rgba(0,0,0,0.18);
+  }
+  .rsvp-flight-seal {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) rotate(-8deg);
+    width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #C16A45, #5E2F1C 60%);
+    box-shadow: 0 4px 8px -2px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.4);
   }
 
   /* ─── Wax seal interactions ──────────────────────────────────────────── */

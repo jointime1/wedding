@@ -1,0 +1,277 @@
+---
+// Draggable polaroid memories with hand-drawn SVG illustrations.
+// User can throw them around — physics-lite (linear drag with ease).
+---
+<section id="polaroids" class="section relative">
+  <div class="container-wide">
+    <div class="text-center reveal">
+      <p class="eyebrow">Воспоминания</p>
+      <div class="mt-4 mx-auto text-clay/60">
+        <svg viewBox="0 0 28 28" class="mx-auto w-5 h-5" fill="none">
+          <path d="M14 2 L 26 14 L 14 26 L 2 14 Z" stroke="currentColor" stroke-width="0.9" />
+          <circle cx="14" cy="14" r="1.2" fill="currentColor" />
+        </svg>
+      </div>
+      <h2 class="mt-5 text-5xl md:text-7xl font-display">
+        Маленький <span class="serif-italic text-terracotta">архив</span>
+      </h2>
+      <p class="mt-6 text-muted max-w-md mx-auto">
+        Перетащите карточки — это альбом, который мы собираем вместе с вами. Подержите, пролистайте.
+      </p>
+    </div>
+
+    <div class="pl-stage mt-16 reveal" id="pl-stage">
+      <!-- Polaroid 1 — mountain silhouette -->
+      <article class="polaroid" data-polaroid style="--rot:-6deg; --x:-22%; --y:0%; --z:1;">
+        <div class="polaroid-photo polaroid-bg-mountain">
+          <svg viewBox="0 0 200 140" class="block w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="plSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#F5ECD9" />
+                <stop offset="1" stop-color="#D9A897" />
+              </linearGradient>
+            </defs>
+            <rect width="200" height="140" fill="url(#plSky)" />
+            <circle cx="155" cy="40" r="14" fill="#EAD9B8" opacity="0.85" />
+            <path d="M0 110 L30 80 L60 95 L90 60 L120 85 L150 50 L180 80 L200 70 L200 140 L0 140 Z" fill="#8A8B72" />
+            <path d="M0 130 L40 100 L80 115 L120 85 L160 105 L200 90 L200 140 L0 140 Z" fill="#5C6A53" />
+            <path d="M80 115 L110 85 L130 90 L120 105 L100 110 Z" fill="#F8F1E3" opacity="0.8" />
+            <g stroke="#1A1410" stroke-width="0.6" fill="none" opacity="0.4">
+              <path d="M40 50 q 3 -3 6 0 q 3 -3 6 0" />
+              <path d="M170 30 q 3 -3 6 0 q 3 -3 6 0" />
+            </g>
+          </svg>
+        </div>
+        <p class="polaroid-caption">Казбек, утро</p>
+      </article>
+
+      <!-- Polaroid 2 — silhouettes / couple -->
+      <article class="polaroid" data-polaroid style="--rot:4deg; --x:-2%; --y:-4%; --z:2;">
+        <div class="polaroid-photo polaroid-bg-couple">
+          <svg viewBox="0 0 200 140" class="block w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="plDusk" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#EAD9B8" />
+                <stop offset="0.6" stop-color="#D9A897" />
+                <stop offset="1" stop-color="#8C4A2F" />
+              </linearGradient>
+            </defs>
+            <rect width="200" height="140" fill="url(#plDusk)" />
+            <circle cx="100" cy="55" r="22" fill="#F8E3A8" opacity="0.95" />
+            <path d="M0 130 L200 130 L200 140 L0 140 Z" fill="#3F4838" />
+            <!-- silhouettes -->
+            <g fill="#1A1410">
+              <ellipse cx="80" cy="92" rx="6" ry="8" />
+              <path d="M70 100 q 10 -4, 20 0 L 92 130 L 68 130 Z" />
+              <ellipse cx="110" cy="90" rx="5" ry="7" />
+              <path d="M102 98 q 8 -4, 16 0 L 122 130 L 98 130 Z" />
+              <!-- linked hands hint -->
+              <path d="M88 110 q 5 -2, 10 0" stroke="#1A1410" stroke-width="1.4" fill="none" opacity="0.7" />
+            </g>
+          </svg>
+        </div>
+        <p class="polaroid-caption">мы вдвоём</p>
+      </article>
+
+      <!-- Polaroid 3 — table feast -->
+      <article class="polaroid" data-polaroid style="--rot:7deg; --x:18%; --y:6%; --z:3;">
+        <div class="polaroid-photo polaroid-bg-feast">
+          <svg viewBox="0 0 200 140" class="block w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="200" height="140" fill="#EFE3CC" />
+            <!-- table -->
+            <rect x="10" y="80" width="180" height="44" fill="#A89B88" />
+            <rect x="10" y="80" width="180" height="6" fill="#8C7B68" />
+            <!-- plates -->
+            <ellipse cx="50" cy="100" rx="18" ry="6" fill="#F8F1E3" />
+            <ellipse cx="100" cy="100" rx="22" ry="7" fill="#F8F1E3" />
+            <ellipse cx="150" cy="100" rx="18" ry="6" fill="#F8F1E3" />
+            <!-- candles -->
+            <rect x="78" y="50" width="3" height="30" fill="#F8F1E3" />
+            <path d="M79.5 50 q 2 -4, 0 -8 q -2 4, 0 8" fill="#B85C3C" />
+            <rect x="118" y="50" width="3" height="30" fill="#F8F1E3" />
+            <path d="M119.5 50 q 2 -4, 0 -8 q -2 4, 0 8" fill="#B85C3C" />
+            <!-- bottle -->
+            <path d="M30 60 L 30 75 L 28 78 L 28 100 L 38 100 L 38 78 L 36 75 L 36 60 Z" fill="#4E5946" />
+            <rect x="29" y="80" width="8" height="6" fill="#F8F1E3" opacity="0.5" />
+          </svg>
+        </div>
+        <p class="polaroid-caption">долгие тосты</p>
+      </article>
+
+      <!-- Polaroid 4 — letter / monogram -->
+      <article class="polaroid" data-polaroid style="--rot:-3deg; --x:36%; --y:-8%; --z:4;">
+        <div class="polaroid-photo polaroid-bg-letter">
+          <svg viewBox="0 0 200 140" class="block w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="200" height="140" fill="#F4E5D0" />
+            <rect x="40" y="30" width="120" height="80" fill="#F8F1E3" stroke="#1A1410" stroke-width="0.5" opacity="0.9" />
+            <!-- monogram -->
+            <text x="100" y="78" text-anchor="middle"
+                  font-family="Instrument Serif" font-style="italic" font-size="34" fill="#B85C3C">Д&amp;А</text>
+            <!-- lines -->
+            <line x1="55" y1="92" x2="145" y2="92" stroke="#1A1410" stroke-width="0.4" opacity="0.4" />
+            <line x1="55" y1="100" x2="135" y2="100" stroke="#1A1410" stroke-width="0.4" opacity="0.4" />
+            <!-- wax seal -->
+            <circle cx="155" cy="105" r="10" fill="#B85C3C" opacity="0.85" />
+          </svg>
+        </div>
+        <p class="polaroid-caption">приглашение</p>
+      </article>
+
+      <p class="pl-hint">потяните · переставьте · обнимите</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const stage = document.getElementById('pl-stage');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (stage && !reduceMotion) {
+    let topZ = 10;
+    stage.querySelectorAll<HTMLElement>('[data-polaroid]').forEach((card) => {
+      let dragging = false;
+      let startX = 0, startY = 0;
+      let baseX = 0, baseY = 0;
+      let curX = 0, curY = 0;
+      let lastT = 0, vx = 0, vy = 0;
+      let raf = 0;
+
+      const reset = () => {
+        // parse % values from CSS vars
+        const cs = getComputedStyle(card);
+        const x = parseFloat(cs.getPropertyValue('--x')) || 0;
+        const y = parseFloat(cs.getPropertyValue('--y')) || 0;
+        baseX = x; baseY = y;
+      };
+      reset();
+
+      const apply = () => {
+        card.style.setProperty('--dx', `${curX}px`);
+        card.style.setProperty('--dy', `${curY}px`);
+      };
+
+      const onDown = (e: PointerEvent) => {
+        dragging = true;
+        topZ++;
+        card.style.zIndex = String(topZ);
+        card.classList.add('is-dragging');
+        startX = e.clientX; startY = e.clientY;
+        lastT = performance.now();
+        vx = 0; vy = 0;
+        cancelAnimationFrame(raf);
+        card.setPointerCapture(e.pointerId);
+      };
+      const onMove = (e: PointerEvent) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        const now = performance.now();
+        const dt = Math.max(1, now - lastT);
+        vx = (dx - curX) / dt;
+        vy = (dy - curY) / dt;
+        lastT = now;
+        curX = dx; curY = dy;
+        apply();
+      };
+      const onUp = (e: PointerEvent) => {
+        if (!dragging) return;
+        dragging = false;
+        card.classList.remove('is-dragging');
+        try { card.releasePointerCapture(e.pointerId); } catch { /* noop */ }
+        // inertia ease back / fling
+        const tickInertia = () => {
+          curX += vx * 16; curY += vy * 16;
+          vx *= 0.92; vy *= 0.92;
+          // pull back home gently
+          curX *= 0.94; curY *= 0.94;
+          apply();
+          if (Math.abs(curX) > 0.5 || Math.abs(curY) > 0.5 || Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05) {
+            raf = requestAnimationFrame(tickInertia);
+          } else {
+            curX = 0; curY = 0; apply();
+          }
+        };
+        raf = requestAnimationFrame(tickInertia);
+      };
+      card.addEventListener('pointerdown', onDown);
+      card.addEventListener('pointermove', onMove);
+      card.addEventListener('pointerup', onUp);
+      card.addEventListener('pointercancel', onUp);
+    });
+  }
+</script>
+
+<style is:global>
+  .pl-stage {
+    position: relative;
+    height: 360px;
+    margin-inline: auto;
+    max-width: 900px;
+    perspective: 900px;
+  }
+  @media (max-width: 768px) {
+    .pl-stage { height: 460px; }
+  }
+  .polaroid {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 220px;
+    background: #FBF6E9;
+    padding: 14px 14px 28px;
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.08),
+      0 14px 28px -14px rgba(0,0,0,0.45),
+      0 30px 60px -30px rgba(0,0,0,0.4);
+    transform:
+      translate(calc(-50% + var(--x, 0) + var(--dx, 0px)),
+                calc(-50% + var(--y, 0) + var(--dy, 0px)))
+      rotate(var(--rot, 0deg));
+    transition: transform 480ms cubic-bezier(.2,.6,.2,1), box-shadow 280ms ease;
+    cursor: grab;
+    z-index: var(--z, 1);
+    touch-action: none;
+    user-select: none;
+  }
+  .polaroid.is-dragging {
+    transition: none;
+    cursor: grabbing;
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.08),
+      0 22px 44px -16px rgba(0,0,0,0.55),
+      0 50px 80px -30px rgba(0,0,0,0.5);
+    transform:
+      translate(calc(-50% + var(--x, 0) + var(--dx, 0px)),
+                calc(-50% + var(--y, 0) + var(--dy, 0px)))
+      rotate(calc(var(--rot, 0deg) + var(--dx, 0px) * 0.03));
+  }
+  .polaroid:hover { transform:
+      translate(calc(-50% + var(--x, 0) + var(--dx, 0px)),
+                calc(-50% + var(--y, 0) + var(--dy, 0px) - 6px))
+      rotate(var(--rot, 0deg)) scale(1.015); }
+  .polaroid-photo {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+  }
+  .polaroid-photo::after {
+    /* old-photo grain */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 0.9 0 0 0 0 0.7 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+  }
+  .polaroid-caption {
+    margin-top: 0.85rem;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 1.1rem; text-align: center;
+    color: #1A1410; opacity: 0.78;
+    letter-spacing: 0.02em;
+  }
+  .pl-hint {
+    position: absolute; bottom: -2rem; left: 50%; transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(94,79,67,0.55); white-space: nowrap;
+  }
+</style>

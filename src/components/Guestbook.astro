@@ -1,0 +1,283 @@
+---
+import Ornament from './Ornament.astro';
+---
+<section id="guestbook" class="section relative">
+  <div class="container-narrow">
+    <div class="text-center reveal">
+      <p class="eyebrow">Гостевая книга</p>
+      <div class="mt-4 mx-auto text-clay/60"><Ornament variant="diamond" class="mx-auto w-5 h-5" /></div>
+      <h2 class="mt-5 text-5xl md:text-7xl font-display">
+        Оставьте <span class="serif-italic text-terracotta underline-hand">пожелание</span>
+      </h2>
+      <p class="mt-6 text-muted max-w-md mx-auto">
+        Прикрепите записку — мы найдём её на празднике. Пишите от души.
+      </p>
+    </div>
+
+    <!-- Wishes board -->
+    <div id="gb-board" class="gb-board mt-16 reveal" data-tilt-disabled>
+      <div class="gb-corkboard">
+        <span class="gb-pin gb-pin-tl"></span>
+        <span class="gb-pin gb-pin-tr"></span>
+        <span class="gb-pin gb-pin-bl"></span>
+        <span class="gb-pin gb-pin-br"></span>
+
+        <div id="gb-notes" class="gb-notes"></div>
+        <p id="gb-empty" class="gb-empty">Здесь пока пусто. Будьте первыми.</p>
+      </div>
+    </div>
+
+    <!-- Compose -->
+    <form id="gb-form" class="mt-10 grid gap-4 max-w-xl mx-auto reveal">
+      <div class="grid sm:grid-cols-[1fr_auto] gap-3">
+        <input
+          id="gb-name" maxlength="40" required
+          class="border border-ink/20 bg-paper/80 px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
+          placeholder="Ваше имя"
+        />
+        <select id="gb-color" class="border border-ink/20 bg-paper/80 px-4 py-3 font-mono text-xs uppercase tracking-widest focus:border-terracotta focus:outline-none cursor-pointer">
+          <option value="cream">Крем</option>
+          <option value="blush">Терракот</option>
+          <option value="moss">Зелень</option>
+          <option value="gold">Золото</option>
+        </select>
+      </div>
+      <textarea
+        id="gb-text" maxlength="180" required rows="3"
+        class="border border-ink/20 bg-paper/80 px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
+        placeholder="Пара тёплых слов…"
+      ></textarea>
+      <div class="flex items-center justify-between">
+        <span id="gb-count" class="font-mono text-[0.65rem] tracking-widest uppercase text-muted">0 / 180</span>
+        <button
+          type="submit"
+          data-magnetic="10"
+          class="magnetic inline-flex items-center gap-3 bg-ink px-8 py-3.5 font-mono text-[0.7rem] tracking-editorial uppercase text-paper hover:bg-terracotta transition-colors cursor-pointer"
+        >
+          Прикрепить
+          <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true">
+            <path d="M0 5 H20 M15 1 L20 5 L15 9" stroke="currentColor" stroke-width="1" />
+          </svg>
+        </button>
+      </div>
+      <p class="font-mono text-[0.6rem] tracking-widest uppercase text-muted text-center">
+        Записки сохраняются в этом браузере — мы получим их позже сводкой.
+      </p>
+    </form>
+  </div>
+</section>
+
+<script>
+  type Note = { id: string; name: string; text: string; color: string; rot: number; t: number };
+  const KEY = 'wedding-guestbook-v1';
+
+  const root = document.getElementById('gb-board');
+  const notesEl = document.getElementById('gb-notes');
+  const emptyEl = document.getElementById('gb-empty');
+  const form = document.getElementById('gb-form') as HTMLFormElement | null;
+  const nameI = document.getElementById('gb-name') as HTMLInputElement | null;
+  const textI = document.getElementById('gb-text') as HTMLTextAreaElement | null;
+  const colorI = document.getElementById('gb-color') as HTMLSelectElement | null;
+  const counter = document.getElementById('gb-count');
+
+  if (root && notesEl && form && nameI && textI && colorI) {
+    const load = (): Note[] => {
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+      catch { return []; }
+    };
+    const save = (notes: Note[]) => localStorage.setItem(KEY, JSON.stringify(notes));
+
+    const render = () => {
+      const notes = load();
+      notesEl.innerHTML = '';
+      if (notes.length === 0) {
+        emptyEl?.classList.remove('hidden');
+      } else {
+        emptyEl?.classList.add('hidden');
+      }
+      notes.forEach((n, i) => {
+        const el = document.createElement('article');
+        el.className = `gb-note gb-note-${n.color}`;
+        el.style.setProperty('--rot', `${n.rot}deg`);
+        el.style.setProperty('--delay', `${i * 60}ms`);
+        const safeName = n.name.replace(/[<>&"']/g, '');
+        const safeText = n.text.replace(/[<>&"']/g, '');
+        el.innerHTML = `
+          <span class="gb-note-pin"></span>
+          <p class="gb-note-text">${safeText}</p>
+          <p class="gb-note-name">— ${safeName}</p>
+        `;
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'gb-note-remove';
+        removeBtn.setAttribute('aria-label', 'Удалить записку');
+        removeBtn.innerHTML = '×';
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const list = load().filter((x) => x.id !== n.id);
+          save(list); render();
+        });
+        el.appendChild(removeBtn);
+        notesEl.appendChild(el);
+      });
+    };
+
+    const update = () => {
+      const len = (textI.value || '').length;
+      if (counter) counter.textContent = `${len} / 180`;
+    };
+    textI.addEventListener('input', update);
+    update();
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameI.value.trim().slice(0, 40);
+      const text = textI.value.trim().slice(0, 180);
+      if (!name || !text) return;
+      const notes = load();
+      notes.push({
+        id: Math.random().toString(36).slice(2),
+        name, text,
+        color: colorI.value,
+        rot: (Math.random() - 0.5) * 8,
+        t: Date.now(),
+      });
+      save(notes);
+      nameI.value = ''; textI.value = ''; update();
+      render();
+      // celebrate
+      const board = root.querySelector('.gb-corkboard');
+      board?.classList.remove('is-pinged');
+      void (board as HTMLElement)?.offsetWidth;
+      board?.classList.add('is-pinged');
+    });
+
+    render();
+  }
+</script>
+
+<style is:global>
+  .gb-board { position: relative; }
+  .gb-corkboard {
+    position: relative;
+    background:
+      radial-gradient(circle at 25% 20%, rgba(184,92,60,0.10), transparent 40%),
+      radial-gradient(circle at 75% 75%, rgba(78,89,70,0.10), transparent 40%),
+      linear-gradient(135deg, #C9A878 0%, #B59161 60%, #A07F50 100%);
+    border: 1px solid rgba(26,20,16,0.25);
+    box-shadow:
+      inset 0 0 0 8px rgba(26,20,16,0.06),
+      0 30px 60px -30px rgba(26,20,16,0.4);
+    padding: 2.5rem 2rem 3rem;
+    min-height: 280px;
+    border-radius: 2px;
+    transition: transform 280ms cubic-bezier(.2,.6,.2,1);
+  }
+  .gb-corkboard::before {
+    /* cork texture */
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(0,0,0,0.05) 1px, transparent 2px),
+      radial-gradient(circle at 80% 60%, rgba(0,0,0,0.05) 1px, transparent 2px),
+      radial-gradient(circle at 60% 20%, rgba(0,0,0,0.04) 1px, transparent 2px),
+      radial-gradient(circle at 40% 80%, rgba(0,0,0,0.05) 1px, transparent 2px);
+    background-size: 30px 30px, 38px 38px, 22px 22px, 44px 44px;
+    opacity: 0.7; mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .gb-corkboard.is-pinged {
+    animation: gb-pinged 600ms cubic-bezier(.2,.6,.2,1);
+  }
+  @keyframes gb-pinged {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.012); box-shadow: 0 30px 80px -30px rgba(184,92,60,0.5); }
+    100% { transform: scale(1); }
+  }
+
+  .gb-pin {
+    position: absolute; width: 16px; height: 16px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #B85C3C, #5E2F1C);
+    box-shadow: 0 4px 6px -2px rgba(0,0,0,0.4), inset 0 -2px 3px rgba(0,0,0,0.4), inset 0 2px 2px rgba(255,255,255,0.25);
+  }
+  .gb-pin-tl { top: 0.6rem; left: 0.6rem; }
+  .gb-pin-tr { top: 0.6rem; right: 0.6rem; background: radial-gradient(circle at 35% 30%, #6F7B66, #3F4838); }
+  .gb-pin-bl { bottom: 0.6rem; left: 0.6rem; background: radial-gradient(circle at 35% 30%, #A8873E, #6A5320); }
+  .gb-pin-br { bottom: 0.6rem; right: 0.6rem; }
+
+  .gb-empty {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(248,241,227,0.7);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+  }
+
+  .gb-notes {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem 1.25rem;
+    position: relative;
+  }
+  @media (min-width: 768px) {
+    .gb-notes { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  }
+
+  .gb-note {
+    position: relative;
+    padding: 1.5rem 1rem 1rem;
+    transform: rotate(var(--rot, 0deg));
+    box-shadow: 0 14px 24px -16px rgba(0,0,0,0.4), 0 1px 0 rgba(0,0,0,0.05);
+    transition: transform 350ms cubic-bezier(.2,.6,.2,1);
+    will-change: transform;
+    opacity: 0; animation: gb-note-in 600ms cubic-bezier(.2,.6,.2,1) var(--delay, 0ms) both;
+    min-height: 130px;
+    cursor: default;
+  }
+  .gb-note:hover {
+    transform: rotate(0deg) translateY(-4px) scale(1.04);
+    box-shadow: 0 22px 36px -18px rgba(0,0,0,0.5);
+    z-index: 3;
+  }
+  @keyframes gb-note-in {
+    from { opacity: 0; transform: rotate(var(--rot, 0deg)) translateY(-12px) scale(0.94); }
+    to   { opacity: 1; transform: rotate(var(--rot, 0deg)); }
+  }
+
+  .gb-note-cream { background: linear-gradient(180deg, #F8F1E3 0%, #EFE3CC 100%); }
+  .gb-note-blush { background: linear-gradient(180deg, #F2D8C9 0%, #D9A897 100%); }
+  .gb-note-moss  { background: linear-gradient(180deg, #DEE5D4 0%, #B8C4A8 100%); }
+  .gb-note-gold  { background: linear-gradient(180deg, #ECDDB6 0%, #D4BB7C 100%); }
+
+  .gb-note-pin {
+    position: absolute; left: 50%; top: -8px; transform: translateX(-50%);
+    width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #1A1410, #0A0806);
+    box-shadow: 0 3px 4px -1px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.18);
+  }
+
+  .gb-note-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem; line-height: 1.45;
+    color: #1A1410;
+  }
+  .gb-note-name {
+    margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(26,20,16,0.6);
+    text-align: right;
+  }
+  .gb-note-remove {
+    position: absolute; top: 4px; right: 6px;
+    width: 18px; height: 18px;
+    background: transparent; border: none;
+    color: rgba(26,20,16,0.35);
+    font-size: 16px; line-height: 1;
+    cursor: pointer; opacity: 0;
+    transition: opacity 200ms ease, color 200ms ease;
+  }
+  .gb-note:hover .gb-note-remove { opacity: 1; }
+  .gb-note-remove:hover { color: #B85C3C; }
+</style>
