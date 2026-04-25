@@ -29,16 +29,17 @@
         <p class="env-letter-date">XIX · IX · MMXXVI</p>
         <p class="env-letter-place">Владикавказ · под взглядом Казбека</p>
       </div>
-      <!-- front flap (with seal) -->
-      <div class="env-flap">
-        <div class="env-seal" id="env-seal" aria-hidden="true">
-          <div class="env-seal-inner">
-            <span class="env-seal-d">Д</span>
-            <span class="env-seal-amp">&amp;</span>
-            <span class="env-seal-a">А</span>
-          </div>
-          <div class="env-seal-crack"></div>
+      <!-- front flap -->
+      <div class="env-flap"></div>
+
+      <!-- wax seal sits on top of the flap V — outside flap clip-path -->
+      <div class="env-seal" id="env-seal" aria-hidden="true">
+        <div class="env-seal-inner">
+          <span class="env-seal-d">Д</span>
+          <span class="env-seal-amp">&amp;</span>
+          <span class="env-seal-a">А</span>
         </div>
+        <div class="env-seal-crack"></div>
       </div>
     </div>
 
@@ -286,34 +287,25 @@
     transition: transform 900ms cubic-bezier(.55,.05,.2,1), opacity 500ms ease 400ms;
   }
 
+  /* Wax seal sits at the flap's V (70% from top of envelope), centered. */
   .env-seal {
     position: absolute;
-    left: 50%; bottom: -22%;
-    width: 26%; aspect-ratio: 1;
-    transform: translateX(-50%) rotate(-6deg);
+    left: 50%; top: 70%;
+    width: 22%; aspect-ratio: 1;
+    transform: translate(-50%, -50%) rotate(-6deg);
     border-radius: 50%;
     background:
       radial-gradient(circle at 35% 30%, #C16A45, #8C4A2F 60%, #5E2F1C);
     box-shadow:
-      0 8px 18px -8px rgba(0,0,0,0.6),
+      0 10px 22px -8px rgba(0,0,0,0.6),
       inset 0 -8px 14px rgba(0,0,0,0.4),
-      inset 0 4px 8px rgba(255,255,255,0.18);
+      inset 0 4px 8px rgba(255,255,255,0.2);
     cursor: pointer;
     transition: transform 280ms cubic-bezier(.2,.6,.2,1);
+    z-index: 3;
   }
   .env-seal:hover {
-    transform: translateX(-50%) rotate(-10deg) scale(1.05);
-  }
-  .env-seal::before {
-    /* wax drips */
-    content: ""; position: absolute; left: 50%; top: 90%;
-    width: 110%; height: 30%;
-    transform: translateX(-50%);
-    background:
-      radial-gradient(ellipse at 20% 0%, #8C4A2F 0%, transparent 40%),
-      radial-gradient(ellipse at 80% 0%, #8C4A2F 0%, transparent 40%);
-    pointer-events: none;
-    opacity: 0.6;
+    transform: translate(-50%, -50%) rotate(-10deg) scale(1.05);
   }
   .env-seal-inner {
     position: absolute; inset: 8%;
@@ -325,7 +317,7 @@
     gap: 0.15rem;
     transition: opacity 400ms ease;
   }
-  .env-seal-d, .env-seal-a { font-size: clamp(1rem, 2.4vw, 1.6rem); font-style: italic; }
+  .env-seal-d, .env-seal-a { font-size: clamp(0.95rem, 2.2vw, 1.5rem); font-style: italic; }
   .env-seal-amp { font-size: 0.5rem; letter-spacing: 0.3em; opacity: 0.8; }
 
   .env-seal-crack {
@@ -345,11 +337,11 @@
   .env-intro.is-opening .env-seal-inner { opacity: 0.4; }
 
   @keyframes env-seal-crack {
-    0%   { transform: translateX(-50%) rotate(-6deg) scale(1); }
-    25%  { transform: translateX(-52%) rotate(-2deg) scale(1.05); }
-    35%  { transform: translateX(-48%) rotate(-10deg) scale(0.96); }
-    55%  { transform: translateX(-51%) rotate(-4deg) scale(1.02); }
-    100% { transform: translateX(-50%) rotate(-90deg) scale(0.6); opacity: 0; }
+    0%   { transform: translate(-50%, -50%) rotate(-6deg) scale(1); }
+    25%  { transform: translate(-52%, -52%) rotate(-2deg) scale(1.05); }
+    35%  { transform: translate(-48%, -50%) rotate(-10deg) scale(0.96); }
+    55%  { transform: translate(-51%, -55%) rotate(-4deg) scale(1.02); }
+    100% { transform: translate(-50%, 30%) rotate(-90deg) scale(0.4); opacity: 0; }
   }
 
   .env-hint {
