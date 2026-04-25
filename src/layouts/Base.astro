@@ -28,9 +28,27 @@ const {
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="relative">
+    <!-- Floating petals layer (decorative) -->
+    <div class="petals-layer" id="petals-layer" aria-hidden="true"></div>
+
+    <!-- Page-section marginalia indicator -->
+    <nav class="page-marker" aria-label="Разделы">
+      <ol class="page-marker-track">
+        <li><a href="#hero" class="page-marker-item" data-target="hero"><span class="pm-label">Приглашение</span><span class="pm-tick"></span><span>I</span></a></li>
+        <li><a href="#format" class="page-marker-item" data-target="format"><span class="pm-label">Формат</span><span class="pm-tick"></span><span>II</span></a></li>
+        <li><a href="#schedule" class="page-marker-item" data-target="schedule"><span class="pm-label">Программа</span><span class="pm-tick"></span><span>III</span></a></li>
+        <li><a href="#rsvp" class="page-marker-item" data-target="rsvp"><span class="pm-label">RSVP</span><span class="pm-tick"></span><span>IV</span></a></li>
+        <li><a href="#contacts" class="page-marker-item" data-target="contacts"><span class="pm-label">Контакты</span><span class="pm-tick"></span><span>V</span></a></li>
+      </ol>
+    </nav>
+
     <slot />
+
     <script>
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ─── Reveal on scroll ──────────────────────────────────────────────
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -43,6 +61,202 @@ const {
         { threshold: 0.12 }
       );
       document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // ─── Mouse parallax ────────────────────────────────────────────────
+      if (!reduceMotion) {
+        const parallaxRoots = document.querySelectorAll<HTMLElement>('[data-parallax-root]');
+        let mxTarget = 0, myTarget = 0, mxCur = 0, myCur = 0, raf = 0;
+
+        const onMove = (e: MouseEvent) => {
+          const w = window.innerWidth, h = window.innerHeight;
+          mxTarget = (e.clientX / w - 0.5) * 2;
+          myTarget = (e.clientY / h - 0.5) * 2;
+          if (!raf) raf = requestAnimationFrame(tick);
+        };
+        const tick = () => {
+          mxCur += (mxTarget - mxCur) * 0.08;
+          myCur += (myTarget - myCur) * 0.08;
+          parallaxRoots.forEach((root) => {
+            root.style.setProperty('--mx', mxCur.toFixed(3));
+            root.style.setProperty('--my', myCur.toFixed(3));
+          });
+          if (Math.abs(mxTarget - mxCur) > 0.001 || Math.abs(myTarget - myCur) > 0.001) {
+            raf = requestAnimationFrame(tick);
+          } else { raf = 0; }
+        };
+        window.addEventListener('mousemove', onMove, { passive: true });
+      }
+
+      // ─── Scroll parallax for mountain layers ──────────────────────────
+      if (!reduceMotion) {
+        const scrollRoots = document.querySelectorAll<HTMLElement>('[data-scroll-parallax]');
+        const onScroll = () => {
+          for (const root of scrollRoots) {
+            const rect = root.getBoundingClientRect();
+            const wh = window.innerHeight;
+            // 0 when far above, 1 when fully scrolled past
+            const progress = Math.max(0, Math.min(1, (wh - rect.top) / (wh + rect.height)));
+            root.style.setProperty('--sy', progress.toFixed(3));
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      // ─── 3D tilt cards ────────────────────────────────────────────────
+      if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
+          let rect: DOMRect | null = null;
+          const onEnter = () => { rect = card.getBoundingClientRect(); card.classList.add('is-tilting'); };
+          const onMove = (e: MouseEvent) => {
+            if (!rect) rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            card.style.setProperty('--tx', x.toFixed(3));
+            card.style.setProperty('--ty', y.toFixed(3));
+          };
+          const onLeave = () => {
+            card.classList.remove('is-tilting');
+            card.style.setProperty('--tx', '0');
+            card.style.setProperty('--ty', '0');
+            rect = null;
+          };
+          card.addEventListener('mouseenter', onEnter);
+          card.addEventListener('mousemove', onMove);
+          card.addEventListener('mouseleave', onLeave);
+        });
+      }
+
+      // ─── Magnetic button ──────────────────────────────────────────────
+      if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+        document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((btn) => {
+          const strength = Number(btn.dataset.magnetic) || 14;
+          const onMove = (e: MouseEvent) => {
+            const rect = btn.getBoundingClientRect();
+            const x = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+            const y = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+            btn.style.setProperty('--mag-x', `${x * strength}px`);
+            btn.style.setProperty('--mag-y', `${y * strength}px`);
+          };
+          const onLeave = () => {
+            btn.style.setProperty('--mag-x', '0px');
+            btn.style.setProperty('--mag-y', '0px');
+          };
+          btn.addEventListener('mousemove', onMove);
+          btn.addEventListener('mouseleave', onLeave);
+        });
+      }
+
+      // ─── Page marker (active section) ─────────────────────────────────
+      const marker = document.querySelector<HTMLElement>('.page-marker');
+      if (marker) {
+        const items = marker.querySelectorAll<HTMLElement>('.page-marker-item');
+        const sections: { id: string; el: HTMLElement; item: HTMLElement }[] = [];
+        items.forEach((item) => {
+          const id = item.dataset.target!;
+          const el = document.getElementById(id);
+          if (el) sections.push({ id, el, item });
+        });
+        const onScroll = () => {
+          const y = window.scrollY + window.innerHeight * 0.35;
+          let active = sections[0];
+          for (const s of sections) {
+            if (s.el.offsetTop <= y) active = s;
+          }
+          for (const s of sections) {
+            s.item.classList.toggle('is-active', s === active);
+          }
+          // reveal after passing hero
+          marker.classList.toggle('is-shown', window.scrollY > window.innerHeight * 0.6);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      // ─── Petals layer ─────────────────────────────────────────────────
+      if (!reduceMotion) {
+        const layer = document.getElementById('petals-layer');
+        if (layer) {
+          const variants = ['', 'leaf', 'gold'];
+          const count = window.innerWidth < 768 ? 6 : 14;
+          for (let i = 0; i < count; i++) {
+            const p = document.createElement('span');
+            p.className = `petal ${variants[i % variants.length]}`;
+            const left = Math.random() * 100;
+            const dur = 18 + Math.random() * 18;
+            const delay = -Math.random() * 30;
+            const drift = (Math.random() - 0.5) * 220;
+            p.style.left = `${left}vw`;
+            p.style.setProperty('--dur', `${dur}s`);
+            p.style.setProperty('--delay', `${delay}s`);
+            p.style.setProperty('--drift', `${drift}px`);
+            layer.appendChild(p);
+          }
+        }
+      }
+
+      // ─── Wax seal click — drop ink imprint onto the page ─────────────
+      document.querySelectorAll<HTMLElement>('[data-wax-seal]').forEach((seal) => {
+        const host = seal.closest<HTMLElement>('section') || document.body;
+        if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+        seal.addEventListener('click', () => {
+          const imprint = document.createElement('span');
+          imprint.className = 'wax-imprint';
+          const hostRect = host.getBoundingClientRect();
+          const sealRect = seal.getBoundingClientRect();
+          const cx = sealRect.left - hostRect.left + sealRect.width / 2 - 45;
+          const cy = sealRect.top - hostRect.top + sealRect.height / 2 - 45;
+          imprint.style.left = `${cx + (Math.random() - 0.5) * 60}px`;
+          imprint.style.top = `${cy + (Math.random() - 0.5) * 60}px`;
+          imprint.style.transform = `rotate(${(Math.random() - 0.5) * 30}deg)`;
+          host.appendChild(imprint);
+          setTimeout(() => imprint.remove(), 1500);
+        });
+      });
+
+      // ─── Live countdown to 19 Sep 2026, 17:00 (Vladikavkaz, UTC+3) ────
+      const cd = document.querySelector<HTMLElement>('[data-countdown]');
+      if (cd) {
+        const target = new Date('2026-09-19T17:00:00+03:00').getTime();
+        const tiles = {
+          d: cd.querySelector<HTMLElement>('[data-cd="d"]'),
+          h: cd.querySelector<HTMLElement>('[data-cd="h"]'),
+          m: cd.querySelector<HTMLElement>('[data-cd="m"]'),
+          s: cd.querySelector<HTMLElement>('[data-cd="s"]'),
+        };
+        const last: Record<string, string> = { d: '', h: '', m: '', s: '' };
+
+        const setTile = (key: 'd' | 'h' | 'm' | 's', val: string) => {
+          const el = tiles[key];
+          if (!el) return;
+          if (last[key] === val) return;
+          last[key] = val;
+          if (reduceMotion) {
+            el.textContent = val;
+            return;
+          }
+          el.classList.add('is-ticking');
+          setTimeout(() => {
+            el.textContent = val;
+            el.classList.remove('is-ticking');
+          }, 280);
+        };
+
+        const update = () => {
+          const now = Date.now();
+          const diff = Math.max(0, target - now);
+          const days = Math.floor(diff / 86_400_000);
+          const hours = Math.floor((diff % 86_400_000) / 3_600_000);
+          const mins = Math.floor((diff % 3_600_000) / 60_000);
+          const secs = Math.floor((diff % 60_000) / 1000);
+          setTile('d', String(days).padStart(3, '0'));
+          setTile('h', String(hours).padStart(2, '0'));
+          setTile('m', String(mins).padStart(2, '0'));
+          setTile('s', String(secs).padStart(2, '0'));
+        };
+        update();
+        setInterval(update, 1000);
+      }
     </script>
   </body>
 </html>

@@ -3,7 +3,7 @@ import Ornament from './Ornament.astro';
 export interface Props { includePicnic: boolean }
 const { includePicnic } = Astro.props;
 ---
-<section class="section relative">
+<section id="schedule" class="section relative">
   <div class="container-wide">
     <div class="text-center reveal">
       <p class="eyebrow"><span class="dot-ornament"></span>Программа<span class="dot-ornament"></span></p>
@@ -23,9 +23,10 @@ const { includePicnic } = Astro.props;
         <!-- vintage tape -->
         <span class="tape hidden md:block -top-3 left-12 w-24 h-6 -rotate-6"></span>
 
-        <div class="ornate-frame relative bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
+        <div data-tilt class="tilt-card ornate-frame relative bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
           <span class="corner-bl"></span><span class="corner-br"></span>
           <div class="grain"></div>
+          <span class="tilt-shine"></span>
 
           <!-- Massive watermark Roman numeral -->
           <span aria-hidden="true"
@@ -81,9 +82,10 @@ const { includePicnic } = Astro.props;
           <span class="tape hidden md:block -top-3 right-12 w-24 h-6 rotate-6"
                 style="background: linear-gradient(135deg, rgba(78,89,70,0.22), rgba(168,135,62,0.18));"></span>
 
-          <div class="ornate-frame relative bg-gradient-to-br from-[#E6EADC] via-paper to-[#D1DBC5] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
+          <div data-tilt class="tilt-card ornate-frame relative bg-gradient-to-br from-[#E6EADC] via-paper to-[#D1DBC5] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
             <span class="corner-bl"></span><span class="corner-br"></span>
             <div class="grain"></div>
+            <span class="tilt-shine"></span>
 
             <span aria-hidden="true"
                   class="pointer-events-none select-none absolute -left-8 -bottom-12 font-display serif-italic text-[18rem] md:text-[24rem] leading-none text-moss/15">II</span>

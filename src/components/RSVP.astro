@@ -135,7 +135,8 @@ const eNote = env.PUBLIC_ENTRY_NOTE ?? 'entry.note';
         <div class="flex flex-col items-center gap-3 pt-2">
           <button
             type="submit"
-            class="group relative inline-flex items-center gap-3 overflow-hidden bg-ink px-12 py-5 font-mono text-xs tracking-editorial uppercase text-paper transition-all hover:bg-terracotta cursor-pointer"
+            data-magnetic="14"
+            class="magnetic group relative inline-flex items-center gap-3 overflow-hidden bg-ink px-12 py-5 font-mono text-xs tracking-editorial uppercase text-paper transition-all hover:bg-terracotta cursor-pointer"
           >
             <span class="relative z-10">Отправить ответ</span>
             <svg width="22" height="10" viewBox="0 0 22 10" fill="none" class="relative z-10 transition-transform group-hover:translate-x-1" aria-hidden="true">
@@ -150,9 +151,20 @@ const eNote = env.PUBLIC_ENTRY_NOTE ?? 'entry.note';
     </div>
 
     <div id="rsvp-thanks" class="hidden mt-16 text-center reveal">
-      <div class="mx-auto text-terracotta/60"><Ornament variant="leaves" class="mx-auto" /></div>
-      <p class="mt-6 font-display serif-italic text-6xl text-terracotta">Спасибо!</p>
+      <!-- Confirmation wax stamp -->
+      <div class="ribbon-stamp inline-block relative">
+        <div class="relative w-32 h-32 mx-auto rounded-full"
+             style="background: radial-gradient(circle at 35% 30%, #C16A45, #8C4A2F 60%, #5E2F1C); box-shadow: 0 8px 18px -8px rgba(0,0,0,0.5), inset 0 -8px 14px rgba(0,0,0,0.35), inset 0 4px 8px rgba(255,255,255,0.2);">
+          <div class="absolute inset-2 rounded-full border border-paper/30 flex flex-col items-center justify-center text-paper">
+            <span class="font-mono text-[0.5rem] tracking-[0.3em] uppercase opacity-80">Получено</span>
+            <span class="font-display serif-italic text-3xl leading-none mt-1">RSVP</span>
+            <span class="font-mono text-[0.5rem] tracking-[0.3em] uppercase opacity-80 mt-1">MMXXVI</span>
+          </div>
+        </div>
+      </div>
+      <p class="mt-8 font-display serif-italic text-6xl text-terracotta">Спасибо!</p>
       <p class="mt-4 text-muted font-serif italic text-xl">Мы получили ваш ответ. До встречи в сентябре.</p>
+      <div class="mt-6 mx-auto text-terracotta/60"><Ornament variant="leaves" class="mx-auto" /></div>
     </div>
 
     <iframe name="rsvp-sink" class="hidden" aria-hidden="true" title="rsvp"></iframe>

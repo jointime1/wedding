@@ -184,10 +184,195 @@
     margin: 0 0.6em;
     color: currentColor; opacity: 0.5;
   }
+
+  /* ─── Mouse parallax — set --mx/--my on parent (range -1..1) ─────────── */
+  .parallax {
+    transition: transform 600ms cubic-bezier(.2,.6,.2,1);
+    will-change: transform;
+  }
+  .parallax-strong { transform: translate3d(calc(var(--mx,0) * 22px), calc(var(--my,0) * 22px), 0); }
+  .parallax-soft   { transform: translate3d(calc(var(--mx,0) * 10px), calc(var(--my,0) * 10px), 0); }
+  .parallax-faint  { transform: translate3d(calc(var(--mx,0) *  4px), calc(var(--my,0) *  4px), 0); }
+
+  /* ─── Scroll parallax for mountain layers (set --sy on container) ────── */
+  .scroll-parallax { will-change: transform; }
+  .scroll-y-1 { transform: translate3d(0, calc(var(--sy,0) *  -8px), 0); }
+  .scroll-y-2 { transform: translate3d(0, calc(var(--sy,0) * -22px), 0); }
+  .scroll-y-3 { transform: translate3d(0, calc(var(--sy,0) * -42px), 0); }
+
+  /* ─── 3D tilt cards (set --tx/--ty on element on hover) ──────────────── */
+  .tilt-card {
+    transform-style: preserve-3d;
+    transform: perspective(1200px) rotateX(calc(var(--ty,0) * -6deg)) rotateY(calc(var(--tx,0) * 6deg));
+    transition: transform 250ms cubic-bezier(.2,.6,.2,1);
+    will-change: transform;
+  }
+  .tilt-card .tilt-shine {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at calc(50% + var(--tx,0) * 50%) calc(50% + var(--ty,0) * 50%),
+      rgba(255,247,229,0.55), transparent 50%);
+    opacity: 0;
+    transition: opacity 350ms ease;
+    mix-blend-mode: soft-light;
+  }
+  .tilt-card.is-tilting .tilt-shine { opacity: 1; }
+
+  /* ─── Magnetic button (set --mag-x / --mag-y) ────────────────────────── */
+  .magnetic {
+    transition: transform 280ms cubic-bezier(.2,.6,.2,1);
+    transform: translate3d(var(--mag-x,0px), var(--mag-y,0px), 0);
+    will-change: transform;
+  }
+
+  /* ─── Animated signature path drawing ────────────────────────────────── */
+  .signature-path {
+    stroke-dasharray: var(--len, 1200);
+    stroke-dashoffset: var(--len, 1200);
+    transition: stroke-dashoffset 2400ms cubic-bezier(.45,.05,.25,1);
+  }
+  .reveal.is-visible .signature-path { stroke-dashoffset: 0; }
+
+  /* ─── Floating petals layer ──────────────────────────────────────────── */
+  .petals-layer {
+    position: fixed; inset: 0; pointer-events: none;
+    z-index: 5; overflow: hidden;
+  }
+  .petal {
+    position: absolute; top: -40px;
+    width: 14px; height: 18px;
+    background: radial-gradient(ellipse at 30% 30%, #D9A897, #B85C3C 70%, #8C4A2F);
+    border-radius: 70% 30% 60% 40% / 60% 40% 60% 40%;
+    opacity: 0;
+    animation: petal-fall var(--dur, 22s) linear infinite;
+    animation-delay: var(--delay, 0s);
+    transform-origin: center;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+  }
+  .petal.leaf {
+    background: radial-gradient(ellipse at 30% 30%, #A8B89C, #6F7B66 70%, #4E5946);
+  }
+  .petal.gold {
+    background: radial-gradient(ellipse at 30% 30%, #E8CB87, #A8873E 70%, #7A6020);
+  }
+  @keyframes petal-fall {
+    0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+    8%   { opacity: 0.6; }
+    50%  { transform: translate3d(calc(var(--drift, 60px) * 1), 50vh, 0) rotate(180deg); opacity: 0.55; }
+    100% { transform: translate3d(calc(var(--drift, 60px) * -0.4), 110vh, 0) rotate(360deg); opacity: 0; }
+  }
+
+  /* ─── Wax seal interactions ──────────────────────────────────────────── */
+  .wax-seal {
+    cursor: pointer;
+    transition: transform 300ms cubic-bezier(.2,.6,.2,1);
+  }
+  .wax-seal:hover { transform: rotate(-4deg) scale(1.04); }
+  .wax-seal:active { transform: rotate(-8deg) scale(0.96); }
+  .wax-imprint {
+    position: absolute;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(193,106,69,0.55), rgba(94,47,28,0.35) 60%, rgba(94,47,28,0.05));
+    pointer-events: none;
+    animation: imprint-fade 1400ms ease-out forwards;
+    mix-blend-mode: multiply;
+  }
+  @keyframes imprint-fade {
+    0%   { transform: scale(0.4); opacity: 0; }
+    20%  { transform: scale(1.05); opacity: 0.85; }
+    100% { transform: scale(1); opacity: 0; }
+  }
+
+  /* ─── Page-number marginalia indicator ───────────────────────────────── */
+  .page-marker {
+    position: fixed;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    pointer-events: none;
+    display: none;
+    opacity: 0;
+    transition: opacity 600ms ease;
+  }
+  .page-marker.is-shown { opacity: 1; }
+  @media (min-width: 1280px) { .page-marker { display: flex; } }
+  .page-marker-track {
+    display: flex; flex-direction: column; gap: 0.85rem;
+    align-items: flex-end;
+  }
+  .page-marker-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(94,79,67,0.55);
+    transition: color 350ms ease, opacity 350ms ease, transform 350ms ease;
+    pointer-events: auto;
+  }
+  .page-marker-item .pm-tick {
+    width: 14px; height: 1px; background: currentColor; opacity: 0.6;
+    transition: width 350ms cubic-bezier(.2,.6,.2,1), background 350ms ease;
+  }
+  .page-marker-item.is-active {
+    color: #B85C3C;
+    transform: translateX(-3px);
+  }
+  .page-marker-item.is-active .pm-tick { width: 30px; }
+  .page-marker-item .pm-label { opacity: 0; transition: opacity 350ms ease; }
+  .page-marker-item.is-active .pm-label,
+  .page-marker:hover .pm-label { opacity: 1; }
+
+  /* ─── Countdown flip-tiles ───────────────────────────────────────────── */
+  .countdown {
+    display: inline-flex; gap: 0.5rem; align-items: stretch;
+  }
+  .cd-tile {
+    position: relative;
+    min-width: 4.5rem;
+    background: linear-gradient(180deg, #F8F1E3 0%, #EAD9B8 100%);
+    border: 1px solid rgba(26,20,16,0.3);
+    padding: 0.75rem 0.85rem 0.6rem;
+    text-align: center;
+    box-shadow: inset 0 -10px 16px -10px rgba(26,20,16,0.18), 0 1px 0 rgba(26,20,16,0.08);
+  }
+  .cd-tile::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%;
+    height: 1px; background: rgba(26,20,16,0.15); pointer-events: none;
+  }
+  .cd-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2.5rem; line-height: 1; display: inline-block;
+    transition: transform 600ms cubic-bezier(.2,.8,.2,1), opacity 600ms ease;
+  }
+  .cd-num.is-ticking { transform: rotateX(90deg); opacity: 0; }
+  .cd-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(94,79,67,0.85); margin-top: 0.4rem; display: block;
+  }
+
+  /* ─── Submit ribbon ───────────────────────────────────────────────────── */
+  .ribbon-stamp {
+    display: inline-block;
+    transform-origin: center;
+    animation: ribbon-stamp 600ms cubic-bezier(.2,.6,.2,1) both;
+  }
+  @keyframes ribbon-stamp {
+    0%   { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+    60%  { transform: scale(1.08) rotate(-4deg); opacity: 1; }
+    100% { transform: scale(1) rotate(-6deg); opacity: 1; }
+  }
+
+  /* ─── Sun emblem hover — rays widen ───────────────────────────────────── */
+  .sun-interactive { transition: filter 600ms ease; }
+  .sun-interactive:hover { filter: drop-shadow(0 0 22px rgba(184,92,60,0.45)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .spin-slow, .drift-slow, .float-soft { animation: none; }
+  .parallax, .scroll-parallax, .tilt-card, .magnetic { transform: none !important; transition: none; }
+  .petal { display: none; }
   html { scroll-behavior: auto; }
+  .signature-path { stroke-dashoffset: 0 !important; transition: none; }
 }

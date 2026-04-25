@@ -7,7 +7,7 @@ const { includePicnic } = Astro.props;
 const datesShort = includePicnic ? '19 · 20 · IX · MMXXVI' : '19 · IX · MMXXVI';
 const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MMXXVI';
 ---
-<section class="relative overflow-hidden grain pt-10 pb-0 md:pt-14">
+<section id="hero" data-parallax-root class="relative overflow-hidden grain pt-10 pb-0 md:pt-14">
   <!-- Vertical marginalia -->
   <div class="hidden md:flex absolute left-6 top-0 h-full items-center pointer-events-none select-none z-10">
     <div class="font-mono text-[0.65rem] tracking-[0.4em] uppercase text-muted [writing-mode:vertical-rl] rotate-180">
@@ -32,9 +32,9 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
 
   <!-- Sun-cross emblem floating over composition -->
   <div class="container-wide relative">
-    <div class="pointer-events-none select-none absolute -top-2 left-1/2 -translate-x-1/2 z-0 text-terracotta/35 float-soft">
+    <div class="pointer-events-none select-none absolute -top-2 left-1/2 -translate-x-1/2 z-0 text-terracotta/35 float-soft parallax parallax-strong">
       <div class="spin-slow">
-        <Ornament variant="sun" class="w-40 h-40 md:w-56 md:h-56" />
+        <Ornament variant="sun" class="w-40 h-40 md:w-56 md:h-56 sun-interactive" />
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
   <div class="container-wide relative pt-20 md:pt-32 pb-12 md:pb-20 text-center">
     <p class="reveal eyebrow text-clay">Просим разделить с нами день</p>
 
-    <h1 class="mt-6 font-display leading-[0.9] reveal letterpress relative z-[1]">
+    <h1 class="mt-6 font-display leading-[0.9] reveal letterpress relative z-[1] parallax parallax-faint">
       <span class="block text-[20vw] md:text-[14rem] tracking-[-0.02em]">Дана</span>
       <span class="block -my-3 md:-my-8 relative">
         <span class="serif-italic text-[18vw] md:text-[11rem] text-terracotta relative inline-block">
@@ -88,9 +88,35 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
       </p>
     </div>
 
+    <!-- Live countdown — vintage flip tiles -->
+    <div class="mt-14 reveal flex flex-col items-center" data-countdown>
+      <p class="font-mono text-[0.6rem] tracking-[0.4em] uppercase text-muted mb-5">
+        До встречи остаётся
+      </p>
+      <div class="countdown" role="timer" aria-live="off">
+        <div class="cd-tile">
+          <span class="cd-num font-display" data-cd="d">000</span>
+          <span class="cd-label">Дней</span>
+        </div>
+        <div class="cd-tile">
+          <span class="cd-num font-display" data-cd="h">00</span>
+          <span class="cd-label">Часов</span>
+        </div>
+        <div class="cd-tile">
+          <span class="cd-num font-display" data-cd="m">00</span>
+          <span class="cd-label">Минут</span>
+        </div>
+        <div class="cd-tile">
+          <span class="cd-num font-display serif-italic text-terracotta" data-cd="s">00</span>
+          <span class="cd-label">Секунд</span>
+        </div>
+      </div>
+    </div>
+
     <a
       href="#rsvp"
-      class="group mt-14 inline-flex items-center gap-3 font-mono text-[0.7rem] tracking-editorial uppercase text-ink hover:text-terracotta transition-colors reveal cursor-pointer"
+      data-magnetic="10"
+      class="magnetic group mt-14 inline-flex items-center gap-3 font-mono text-[0.7rem] tracking-editorial uppercase text-ink hover:text-terracotta transition-colors reveal cursor-pointer"
     >
       <span class="w-12 h-px bg-current opacity-60 group-hover:w-16 transition-all duration-300"></span>
       <span>Подтвердить присутствие</span>
@@ -98,22 +124,26 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
     </a>
   </div>
 
-  <!-- Wax seal — bottom-right corner of hero -->
-  <div class="hidden md:block absolute right-12 bottom-44 z-10 reveal">
-    <div class="relative w-28 h-28 rounded-full rotate-[-8deg]"
-         style="background: radial-gradient(circle at 35% 30%, #C16A45, #8C4A2F 60%, #5E2F1C); box-shadow: 0 8px 18px -8px rgba(0,0,0,0.5), inset 0 -6px 12px rgba(0,0,0,0.35), inset 0 4px 6px rgba(255,255,255,0.15);">
-      <div class="absolute inset-2 rounded-full border border-paper/30 flex flex-col items-center justify-center text-paper">
+  <!-- Wax seal — bottom-right corner of hero, interactive -->
+  <div class="hidden md:block absolute right-12 bottom-44 z-10 reveal parallax parallax-soft">
+    <button
+      type="button"
+      data-wax-seal
+      aria-label="Печать Дана и Александр"
+      class="wax-seal relative w-28 h-28 rounded-full rotate-[-8deg] focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+      style="background: radial-gradient(circle at 35% 30%, #C16A45, #8C4A2F 60%, #5E2F1C); box-shadow: 0 8px 18px -8px rgba(0,0,0,0.5), inset 0 -6px 12px rgba(0,0,0,0.35), inset 0 4px 6px rgba(255,255,255,0.15);">
+      <span class="absolute inset-2 rounded-full border border-paper/30 flex flex-col items-center justify-center text-paper">
         <span class="font-display serif-italic text-3xl leading-none">Д</span>
         <span class="font-display text-[0.55rem] tracking-[0.4em] my-0.5 opacity-80">&amp;</span>
         <span class="font-display serif-italic text-3xl leading-none">А</span>
-      </div>
-    </div>
+      </span>
+    </button>
   </div>
 
   <!-- Layered Caucasus skyline with drifting clouds -->
-  <div class="relative mt-2">
+  <div class="relative mt-2" data-scroll-parallax>
     <!-- clouds drift -->
-    <div class="absolute inset-0 pointer-events-none drift-slow opacity-70">
+    <div class="absolute inset-0 pointer-events-none drift-slow opacity-70 scroll-parallax scroll-y-3">
       <svg class="w-full" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
         <g fill="#F8F1E3" opacity="0.85">
           <ellipse cx="240" cy="80" rx="80" ry="9" />
@@ -146,23 +176,33 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
         </linearGradient>
       </defs>
       <rect width="1440" height="260" fill="url(#sky)" />
-      <!-- Far ridge -->
-      <path d="M0 220 L80 170 L180 195 L280 140 L380 180 L500 110 L620 165 L740 130 L860 175 L980 120 L1100 170 L1220 135 L1340 180 L1440 150 L1440 260 L0 260 Z"
-            fill="url(#ridge1)" opacity="0.7" />
+
+      <!-- Far ridge — slow parallax -->
+      <g class="scroll-parallax scroll-y-1">
+        <path d="M0 220 L80 170 L180 195 L280 140 L380 180 L500 110 L620 165 L740 130 L860 175 L980 120 L1100 170 L1220 135 L1340 180 L1440 150 L1440 260 L0 260 Z"
+              fill="url(#ridge1)" opacity="0.7" />
+      </g>
+
       <!-- Mid ridge -->
-      <path d="M0 240 L120 200 L240 220 L360 160 L480 200 L600 145 L700 90 L760 135 L880 185 L1000 155 L1120 195 L1240 170 L1360 205 L1440 195 L1440 260 L0 260 Z"
-            fill="url(#ridge2)" opacity="0.85" />
+      <g class="scroll-parallax scroll-y-2">
+        <path d="M0 240 L120 200 L240 220 L360 160 L480 200 L600 145 L700 90 L760 135 L880 185 L1000 155 L1120 195 L1240 170 L1360 205 L1440 195 L1440 260 L0 260 Z"
+              fill="url(#ridge2)" opacity="0.85" />
+      </g>
+
       <!-- Front Kazbek silhouette -->
-      <path d="M0 260 L0 245 L160 220 L320 240 L460 195 L560 145 L660 60 L720 30 L780 75 L860 140 L960 195 L1100 225 L1240 210 L1360 235 L1440 220 L1440 260 Z"
-            fill="url(#ridge3)" />
-      <!-- Snow caps (Kazbek) -->
-      <path d="M620 110 L660 60 L720 30 L780 75 L800 100 L760 85 L720 70 L680 85 L640 105 Z"
-            fill="#F8F1E3" opacity="0.9" />
-      <!-- Secondary snow streaks -->
-      <path d="M460 195 L500 165 L540 185 L520 195 Z" fill="#F8F1E3" opacity="0.45" />
-      <path d="M860 140 L890 120 L920 145 Z" fill="#F8F1E3" opacity="0.45" />
+      <g class="scroll-parallax scroll-y-3">
+        <path d="M0 260 L0 245 L160 220 L320 240 L460 195 L560 145 L660 60 L720 30 L780 75 L860 140 L960 195 L1100 225 L1240 210 L1360 235 L1440 220 L1440 260 Z"
+              fill="url(#ridge3)" />
+        <!-- Snow caps (Kazbek) -->
+        <path d="M620 110 L660 60 L720 30 L780 75 L800 100 L760 85 L720 70 L680 85 L640 105 Z"
+              fill="#F8F1E3" opacity="0.9" />
+        <!-- Secondary snow streaks -->
+        <path d="M460 195 L500 165 L540 185 L520 195 Z" fill="#F8F1E3" opacity="0.45" />
+        <path d="M860 140 L890 120 L920 145 Z" fill="#F8F1E3" opacity="0.45" />
+      </g>
+
       <!-- subtle birds -->
-      <g stroke="#1A1410" stroke-width="0.8" fill="none" opacity="0.55">
+      <g stroke="#1A1410" stroke-width="0.8" fill="none" opacity="0.55" class="float-soft">
         <path d="M340 70 q 4 -4 8 0 q 4 -4 8 0" />
         <path d="M380 90 q 3 -3 6 0 q 3 -3 6 0" />
         <path d="M1180 80 q 4 -4 8 0 q 4 -4 8 0" />

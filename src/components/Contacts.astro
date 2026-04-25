@@ -4,7 +4,7 @@ const env = import.meta.env;
 const dana = env.PUBLIC_CONTACT_DANA ?? '';
 const alex = env.PUBLIC_CONTACT_ALEX ?? '';
 ---
-<section class="section relative">
+<section id="contacts" class="section relative">
   <div class="container-wide">
     <div class="text-center reveal">
       <p class="eyebrow">По всем вопросам</p>
@@ -16,8 +16,9 @@ const alex = env.PUBLIC_CONTACT_ALEX ?? '';
 
     <div class="mt-16 grid gap-6 sm:grid-cols-2 reveal">
       <!-- Calling card 1 -->
-      <div class="ornate-frame relative bg-paper vintage-border p-10 md:p-12 text-center -rotate-[0.6deg] hover:rotate-0 transition-transform duration-500 cursor-default">
+      <div data-tilt class="tilt-card ornate-frame relative bg-paper vintage-border p-10 md:p-12 text-center cursor-default overflow-hidden">
         <span class="corner-bl"></span><span class="corner-br"></span>
+        <span class="tilt-shine"></span>
         <p class="eyebrow">Невеста</p>
         <p class="mt-5 font-display serif-italic text-6xl">Дана</p>
         <div class="mt-4 text-ink/40 mx-auto"><Ornament variant="rule" class="mx-auto w-32" /></div>
@@ -28,8 +29,9 @@ const alex = env.PUBLIC_CONTACT_ALEX ?? '';
       </div>
 
       <!-- Calling card 2 -->
-      <div class="ornate-frame relative bg-paper vintage-border p-10 md:p-12 text-center rotate-[0.6deg] hover:rotate-0 transition-transform duration-500 cursor-default">
+      <div data-tilt class="tilt-card ornate-frame relative bg-paper vintage-border p-10 md:p-12 text-center cursor-default overflow-hidden">
         <span class="corner-bl"></span><span class="corner-br"></span>
+        <span class="tilt-shine"></span>
         <p class="eyebrow">Жених</p>
         <p class="mt-5 font-display serif-italic text-6xl">Александр</p>
         <div class="mt-4 text-ink/40 mx-auto"><Ornament variant="rule" class="mx-auto w-32" /></div>
@@ -46,7 +48,7 @@ const alex = env.PUBLIC_CONTACT_ALEX ?? '';
   <!-- closing emblem -->
   <div class="reveal text-clay/40 mb-8">
     <div class="spin-slow inline-block">
-      <Ornament variant="sun" class="mx-auto w-24 h-24" />
+      <Ornament variant="sun" class="mx-auto w-24 h-24 sun-interactive" />
     </div>
   </div>
 
