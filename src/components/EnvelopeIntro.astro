@@ -22,9 +22,9 @@
         <div class="env-letter-grain"></div>
         <p class="env-letter-eyebrow">Приглашение</p>
         <p class="env-letter-names">
-          <span>Дана</span>
+          <span class="env-letter-name">Дана</span>
           <span class="env-amp">&amp;</span>
-          <span>Александр</span>
+          <span class="env-letter-name">Александр</span>
         </p>
         <p class="env-letter-date">XIX · IX · MMXXVI</p>
         <p class="env-letter-place">Владикавказ · под взглядом Казбека</p>
@@ -197,22 +197,27 @@
 
   .env-letter {
     position: absolute;
-    left: 8%; right: 8%; top: 14%; bottom: 26%;
+    left: 6%; right: 6%; top: 8%; bottom: 14%;
     background:
       linear-gradient(180deg, #F8F1E3, #EFE3CC);
     border: 1px solid rgba(26,20,16,0.18);
     box-shadow: 0 10px 24px -16px rgba(0,0,0,0.4);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
+    overflow: hidden;
+    padding: 0.75rem 1rem;
     transform: translateY(0) scale(1);
-    transition: transform 1200ms cubic-bezier(.2,.6,.2,1);
+    opacity: 0;
+    transition: transform 1200ms cubic-bezier(.2,.6,.2,1), opacity 600ms ease 320ms;
     z-index: 1;
   }
   .env-intro.is-opening .env-letter {
-    transform: translateY(-12%) scale(1.05);
+    opacity: 1;
+    transform: translateY(-10%) scale(1.04);
   }
   .env-intro.is-zoomed .env-letter {
-    transform: translateY(-30%) scale(1.45);
+    opacity: 1;
+    transform: translateY(-26%) scale(1.35);
   }
   .env-letter-grain {
     position: absolute; inset: 0; pointer-events: none;
@@ -221,26 +226,35 @@
   }
   .env-letter-eyebrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
-    color: #5E4F43; margin-bottom: 0.75rem;
+    font-size: 0.5rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: #5E4F43; margin-bottom: 0.45rem;
   }
   .env-letter-names {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2rem, 5.5vw, 3.4rem); line-height: 1;
-    color: #1A1410; display: inline-flex; gap: 0.5rem; align-items: baseline;
+    color: #1A1410;
+    display: flex; flex-direction: column; align-items: center;
+    line-height: 0.95; gap: 0.05em;
+  }
+  .env-letter-name {
+    font-size: clamp(1.5rem, 4.4vw, 2.4rem);
+    letter-spacing: -0.01em;
   }
   .env-letter-names .env-amp {
     font-style: italic; color: #B85C3C;
+    font-size: clamp(1.1rem, 3.2vw, 1.7rem);
+    line-height: 1;
   }
   .env-letter-date {
-    margin-top: 0.85rem;
+    margin-top: 0.65rem;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem; letter-spacing: 0.4em; color: #5E4F43;
+    font-size: 0.55rem; letter-spacing: 0.4em; color: #5E4F43;
   }
   .env-letter-place {
-    margin-top: 0.4rem;
+    margin-top: 0.3rem;
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 0.95rem; color: #5E4F43;
+    font-style: italic; font-size: 0.85rem; color: #5E4F43;
+    max-width: 100%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
   .env-flap {

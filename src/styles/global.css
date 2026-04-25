@@ -236,6 +236,8 @@
   .petals-layer {
     position: fixed; inset: 0; pointer-events: none;
     z-index: 5; overflow: hidden;
+    opacity: var(--petals-opacity, 1);
+    transition: opacity 350ms ease;
   }
   .petal {
     position: absolute; top: -40px;

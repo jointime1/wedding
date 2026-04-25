@@ -190,7 +190,7 @@ const {
         onScroll();
       }
 
-      // ─── Petals layer (cursor-reactive) ───────────────────────────────
+      // ─── Petals layer (cursor-reactive, fades on scroll) ──────────────
       type PetalState = { el: HTMLElement; vx: number; vy: number; offX: number; offY: number };
       const petalStates: PetalState[] = [];
       if (!reduceMotion) {
@@ -212,6 +212,23 @@ const {
             layer.appendChild(p);
             petalStates.push({ el: p, vx: 0, vy: 0, offX: 0, offY: 0 });
           }
+
+          // Fade petals out as user scrolls past hero — only at the top.
+          const updatePetalsOpacity = () => {
+            const wh = window.innerHeight;
+            const fadeStart = wh * 0.35;
+            const fadeEnd = wh * 0.95;
+            const y = window.scrollY;
+            let opacity = 1;
+            if (y > fadeStart) {
+              opacity = Math.max(0, 1 - (y - fadeStart) / (fadeEnd - fadeStart));
+            }
+            layer.style.setProperty('--petals-opacity', opacity.toFixed(3));
+            layer.style.visibility = opacity <= 0.01 ? 'hidden' : 'visible';
+          };
+          updatePetalsOpacity();
+          window.addEventListener('scroll', updatePetalsOpacity, { passive: true });
+          window.addEventListener('resize', updatePetalsOpacity);
 
           // Cursor-reactive petals — push away when cursor near
           if (hoverDevice) {
