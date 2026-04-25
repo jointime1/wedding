@@ -264,33 +264,6 @@
     100% { transform: translate3d(calc(var(--drift, 60px) * -0.4), 110vh, 0) rotate(360deg); opacity: 0; }
   }
 
-  /* ─── Calligraphy ink cursor ──────────────────────────────────────────── */
-  .ink-cursor {
-    position: fixed; top: 0; left: 0; width: 28px; height: 28px;
-    pointer-events: none; z-index: 90;
-    transform: translate(-9999px, -9999px);
-    transition: opacity 200ms ease;
-    will-change: transform;
-    margin-left: -3px; margin-top: -3px;
-  }
-  .ink-cursor .ink-nib {
-    width: 28px; height: 28px;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
-    transition: transform 200ms ease, filter 200ms ease;
-  }
-  .ink-cursor.is-pointing { opacity: 0; }
-  .ink-cursor.is-hidden { opacity: 0; }
-  .has-ink-cursor { cursor: none; }
-  .has-ink-cursor a, .has-ink-cursor button, .has-ink-cursor input,
-  .has-ink-cursor textarea, .has-ink-cursor select, .has-ink-cursor label[for],
-  .has-ink-cursor [role="button"] { cursor: pointer; }
-  .has-ink-cursor input[type="text"], .has-ink-cursor textarea { cursor: text; }
-  .ink-trail {
-    position: fixed; inset: 0; pointer-events: none;
-    z-index: 89;
-    mix-blend-mode: multiply;
-  }
-
   /* ─── Confetti canvas ─────────────────────────────────────────────────── */
   .confetti-canvas {
     position: fixed; inset: 0; pointer-events: none;

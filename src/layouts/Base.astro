@@ -34,16 +34,6 @@ const {
     <EnvelopeIntro />
     <Atmosphere />
 
-    <!-- Calligraphy cursor + ink trail (hover devices only) -->
-    <div id="ink-cursor" class="ink-cursor" aria-hidden="true">
-      <svg viewBox="0 0 28 28" class="ink-nib" aria-hidden="true">
-        <path d="M14 4 L 22 22 L 14 18 L 6 22 Z" fill="#1A1410" />
-        <path d="M14 4 L 14 18" stroke="#F8F1E3" stroke-width="0.6" />
-        <circle cx="14" cy="20" r="1.6" fill="#B85C3C" />
-      </svg>
-    </div>
-    <canvas id="ink-trail" class="ink-trail" aria-hidden="true"></canvas>
-
     <!-- Floating petals layer (decorative, cursor-reactive) -->
     <div class="petals-layer" id="petals-layer" aria-hidden="true"></div>
 
@@ -309,83 +299,6 @@ const {
         };
         update();
         setInterval(update, 1000);
-      }
-
-      // ─── Calligraphy cursor + ink trail ───────────────────────────────
-      if (!reduceMotion && hoverDevice) {
-        const cursor = document.getElementById('ink-cursor');
-        const canvas = document.getElementById('ink-trail') as HTMLCanvasElement | null;
-        if (cursor && canvas) {
-          const ctx = canvas.getContext('2d')!;
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const resize = () => {
-            canvas.width = window.innerWidth * dpr;
-            canvas.height = window.innerHeight * dpr;
-            canvas.style.width = window.innerWidth + 'px';
-            canvas.style.height = window.innerHeight + 'px';
-            ctx.scale(dpr, dpr);
-          };
-          resize();
-          window.addEventListener('resize', resize);
-
-          document.body.classList.add('has-ink-cursor');
-
-          type Drop = { x: number; y: number; r: number; a: number; vx: number; vy: number };
-          const drops: Drop[] = [];
-          let lastX = pointer.x, lastY = pointer.y;
-
-          const onMove = () => {
-            const dx = pointer.x - lastX;
-            const dy = pointer.y - lastY;
-            const speed = Math.hypot(dx, dy);
-            if (speed > 1.4) {
-              const count = Math.min(3, Math.ceil(speed / 14));
-              for (let i = 0; i < count; i++) {
-                drops.push({
-                  x: pointer.x + (Math.random() - 0.5) * 4,
-                  y: pointer.y + (Math.random() - 0.5) * 4,
-                  r: 1.5 + Math.random() * 2.5,
-                  a: 0.6 + Math.random() * 0.3,
-                  vx: dx * 0.04 + (Math.random() - 0.5) * 0.6,
-                  vy: dy * 0.04 + (Math.random() - 0.5) * 0.6,
-                });
-              }
-            }
-            lastX = pointer.x; lastY = pointer.y;
-            cursor.style.transform = `translate(${pointer.x}px, ${pointer.y}px) rotate(${Math.atan2(dy, dx) * 180 / Math.PI + 45}deg)`;
-            if (drops.length > 220) drops.splice(0, drops.length - 220);
-          };
-          window.addEventListener('mousemove', onMove, { passive: true });
-
-          const draw = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = drops.length - 1; i >= 0; i--) {
-              const d = drops[i];
-              d.x += d.vx; d.y += d.vy;
-              d.vx *= 0.94; d.vy *= 0.94;
-              d.r *= 0.985;
-              d.a *= 0.96;
-              ctx.beginPath();
-              ctx.fillStyle = `rgba(26, 20, 16, ${d.a.toFixed(3)})`;
-              ctx.arc(d.x, d.y, Math.max(0.1, d.r), 0, Math.PI * 2);
-              ctx.fill();
-              if (d.a < 0.02 || d.r < 0.3) drops.splice(i, 1);
-            }
-            requestAnimationFrame(draw);
-          };
-          requestAnimationFrame(draw);
-
-          // Hide cursor when over interactive controls (revert to default)
-          document.addEventListener('mouseover', (e) => {
-            const t = e.target as HTMLElement;
-            const isInteractive = t.closest('a, button, input, textarea, select, label[for], [role="button"]');
-            cursor.classList.toggle('is-pointing', !!isInteractive);
-          });
-
-          // Hide entirely when leaving window
-          document.addEventListener('mouseleave', () => cursor.classList.add('is-hidden'));
-          document.addEventListener('mouseenter', () => cursor.classList.remove('is-hidden'));
-        }
       }
 
       // ─── Easter egg: click "&" between names 7 times → confetti ───────
