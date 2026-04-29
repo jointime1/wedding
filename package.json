@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node tests/guestbook-legacy.mjs",
+    "test:perf": "node tests/perf.mjs",
+    "test:rsvp": "node --env-file=.env tests/rsvp-submit.mjs",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview"

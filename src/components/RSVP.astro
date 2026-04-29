@@ -182,9 +182,13 @@ const eNote = env.PUBLIC_ENTRY_NOTE ?? 'entry.note';
 </section>
 
 <script>
-  const form = document.getElementById('rsvp-form');
+  const form = document.getElementById('rsvp-form') as HTMLFormElement | null;
   const thanks = document.getElementById('rsvp-thanks');
-  form?.addEventListener('submit', () => {
+  const isPreview = form?.dataset.preview === '1';
+  form?.addEventListener('submit', (e) => {
+    // In preview mode (no Google Form action), don't actually POST anywhere —
+    // just show the thank-you so the layout can be reviewed end-to-end.
+    if (isPreview) e.preventDefault();
     setTimeout(() => {
       form.classList.add('hidden');
       thanks?.classList.remove('hidden');

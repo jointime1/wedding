@@ -91,8 +91,10 @@ import Ornament from './Ornament.astro';
 
   if (root && notesEl && form && nameI && textI && colorI) {
     const load = (): Note[] => {
-      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
-      catch { return []; }
+      try {
+        const parsed = JSON.parse(localStorage.getItem(KEY) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch { return []; }
     };
     const save = (notes: Note[]) => localStorage.setItem(KEY, JSON.stringify(notes));
 
