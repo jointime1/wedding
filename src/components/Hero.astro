@@ -43,10 +43,10 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
   <div class="container-wide relative pt-20 md:pt-32 pb-12 md:pb-20 text-center">
     <p class="reveal eyebrow text-clay">Просим разделить с нами день</p>
 
-    <h1 class="mt-6 font-display leading-[0.9] reveal letterpress relative z-[1] parallax parallax-faint">
-      <span class="block text-[20vw] md:text-[14rem] tracking-[-0.02em]">Дана</span>
+    <h1 class="mt-6 font-display leading-[0.9] reveal letterpress relative z-[1] parallax parallax-faint [text-wrap:balance]">
+      <span class="block text-[clamp(3.25rem,18vw,14rem)] md:text-[14rem] tracking-[-0.02em]">Дана</span>
       <span class="block -my-3 md:-my-8 relative">
-        <span data-easter-amp class="serif-italic text-[18vw] md:text-[11rem] text-terracotta relative inline-block">
+        <span data-easter-amp class="serif-italic text-[clamp(3rem,16vw,11rem)] md:text-[11rem] text-terracotta relative inline-block">
           &amp;
           <!-- tiny embellishments left/right of ampersand -->
           <span class="hidden md:inline-block absolute top-1/2 -translate-y-1/2 -left-16 text-clay/60">
@@ -57,7 +57,7 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
           </span>
         </span>
       </span>
-      <span class="block text-[20vw] md:text-[14rem] tracking-[-0.02em]">Александр</span>
+      <span class="block text-[clamp(2.75rem,17vw,14rem)] md:text-[14rem] tracking-[-0.02em]">Александр</span>
     </h1>
 
     <!-- Date plate -->
@@ -68,18 +68,18 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
       </p>
 
       <!-- Letterpress date block -->
-      <div class="mt-6 inline-flex items-stretch gap-0 border border-ink/30">
-        <div class="px-5 py-3 border-r border-ink/30">
-          <p class="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-muted">День</p>
-          <p class="font-display text-3xl leading-none">{includePicnic ? '19—20' : '19'}</p>
+      <div class="mt-6 inline-flex items-stretch gap-0 border border-ink/30 max-w-full">
+        <div class="px-3 sm:px-5 py-3 border-r border-ink/30">
+          <p class="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-muted">День</p>
+          <p class="font-display text-2xl sm:text-3xl leading-none">{includePicnic ? '19—20' : '19'}</p>
         </div>
-        <div class="px-5 py-3 border-r border-ink/30">
-          <p class="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-muted">Месяц</p>
-          <p class="font-display serif-italic text-3xl leading-none">сентябрь</p>
+        <div class="px-3 sm:px-5 py-3 border-r border-ink/30">
+          <p class="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-muted">Месяц</p>
+          <p class="font-display serif-italic text-2xl sm:text-3xl leading-none">сентябрь</p>
         </div>
-        <div class="px-5 py-3">
-          <p class="font-mono text-[0.55rem] tracking-[0.3em] uppercase text-muted">Год</p>
-          <p class="font-display text-3xl leading-none">MMXXVI</p>
+        <div class="px-3 sm:px-5 py-3">
+          <p class="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-muted">Год</p>
+          <p class="font-display text-2xl sm:text-3xl leading-none">MMXXVI</p>
         </div>
       </div>
 
@@ -116,11 +116,13 @@ const datesLong = includePicnic ? 'XIX · XX · IX · MMXXVI' : 'XIX · IX · MM
     <a
       href="#rsvp"
       data-magnetic="10"
-      class="magnetic group mt-14 inline-flex items-center gap-3 font-mono text-[0.7rem] tracking-editorial uppercase text-ink hover:text-terracotta transition-colors reveal cursor-pointer"
+      class="magnetic group mt-14 inline-flex items-center gap-3 border-y border-ink/70 px-7 py-4 min-h-[44px] font-mono text-[0.7rem] tracking-editorial uppercase text-ink hover:text-terracotta hover:border-terracotta transition-colors reveal cursor-pointer"
     >
-      <span class="w-12 h-px bg-current opacity-60 group-hover:w-16 transition-all duration-300"></span>
+      <span aria-hidden="true" class="w-6 h-px bg-current opacity-60 transition-all duration-300 group-hover:w-9"></span>
       <span>Подтвердить присутствие</span>
-      <span class="w-12 h-px bg-current opacity-60 group-hover:w-16 transition-all duration-300"></span>
+      <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">
+        <path d="M0 5 H20 M15 1 L20 5 L15 9" stroke="currentColor" stroke-width="1" />
+      </svg>
     </a>
   </div>
 

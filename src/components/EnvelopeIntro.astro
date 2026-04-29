@@ -105,8 +105,12 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
         if (e.key === 'Escape') skipNow();
       });
-      // Auto-open after 5s if user does nothing
-      setTimeout(() => { if (!opened) open(); }, 5500);
+      // If the user tries to scroll or swipe, treat that as "let me in".
+      const wakeOnIntent = (e: Event) => { if (!opened) { e.preventDefault(); open(); } };
+      intro.addEventListener('wheel', wakeOnIntent, { passive: false });
+      intro.addEventListener('touchmove', wakeOnIntent, { passive: false });
+      // Auto-open after a short pause if the user does nothing.
+      setTimeout(() => { if (!opened) open(); }, 3500);
     }
   }
 </script>

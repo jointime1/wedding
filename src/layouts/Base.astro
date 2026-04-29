@@ -58,6 +58,13 @@ const {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const hoverDevice = window.matchMedia('(hover: hover)').matches && window.innerWidth >= 768;
 
+      // Freeze decorative animations when the tab is backgrounded.
+      const syncVisibility = () => {
+        document.documentElement.dataset.pageHidden = document.hidden ? '1' : '';
+      };
+      document.addEventListener('visibilitychange', syncVisibility);
+      syncVisibility();
+
       // ─── Reveal on scroll ──────────────────────────────────────────────
       const io = new IntersectionObserver(
         (entries) => {

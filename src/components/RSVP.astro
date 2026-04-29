@@ -5,6 +5,7 @@ const { includePicnic } = Astro.props;
 
 const env = import.meta.env;
 const action = env.PUBLIC_GOOGLE_FORM_ACTION ?? '';
+const isPreview = !action;
 const eName = env.PUBLIC_ENTRY_NAME ?? 'entry.name';
 const eAttending = env.PUBLIC_ENTRY_ATTENDING ?? 'entry.attending';
 const ePlusOne = env.PUBLIC_ENTRY_PLUS_ONE ?? 'entry.plusOne';
@@ -19,9 +20,9 @@ const eNote = env.PUBLIC_ENTRY_NOTE ?? 'entry.note';
 
   <div class="container-narrow relative">
     <div class="text-center reveal">
-      <p class="eyebrow">Respondez s'il vous plaît</p>
+      <p class="eyebrow">Répondez s’il vous plaît</p>
       <div class="mt-4 mx-auto text-clay/60"><Ornament variant="diamond" class="mx-auto w-5 h-5" /></div>
-      <h2 class="mt-5 text-5xl md:text-7xl font-display">
+      <h2 class="mt-5 text-5xl md:text-7xl font-display [text-wrap:balance]">
         Будете <span class="serif-italic text-terracotta underline-hand">с&nbsp;нами?</span>
       </h2>
       <p class="mt-6 text-muted max-w-md mx-auto">
@@ -52,11 +53,20 @@ const eNote = env.PUBLIC_ENTRY_NOTE ?? 'entry.note';
       <span class="absolute -bottom-1 -left-1 w-5 h-5 border-b border-l border-ink/40"></span>
       <span class="absolute -bottom-1 -right-1 w-5 h-5 border-b border-r border-ink/40"></span>
 
+      {isPreview && (
+        <div class="mb-4 flex items-start gap-3 border border-clay/40 bg-clay/5 px-4 py-3 text-left">
+          <span class="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-clay shrink-0 mt-1">Preview</span>
+          <p class="font-serif italic text-sm text-ink/80">
+            Форма работает в режиме предпросмотра — ответы не сохраняются. Подключите Google&nbsp;Form через переменную <code class="font-mono not-italic text-xs">PUBLIC_GOOGLE_FORM_ACTION</code>.
+          </p>
+        </div>
+      )}
       <form
         id="rsvp-form"
         action={action}
         method="POST"
         target="rsvp-sink"
+        data-preview={isPreview ? '1' : null}
         class="bg-paper p-8 md:p-14 vintage-border grid gap-8 relative"
       >
         <!-- Postcard header strip -->

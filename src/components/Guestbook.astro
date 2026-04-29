@@ -6,7 +6,7 @@ import Ornament from './Ornament.astro';
     <div class="text-center reveal">
       <p class="eyebrow">Гостевая книга</p>
       <div class="mt-4 mx-auto text-clay/60"><Ornament variant="diamond" class="mx-auto w-5 h-5" /></div>
-      <h2 class="mt-5 text-5xl md:text-7xl font-display">
+      <h2 class="mt-5 text-5xl md:text-7xl font-display [text-wrap:balance]">
         Оставьте <span class="serif-italic text-terracotta underline-hand">пожелание</span>
       </h2>
       <p class="mt-6 text-muted max-w-md mx-auto">
@@ -28,25 +28,34 @@ import Ornament from './Ornament.astro';
     </div>
 
     <!-- Compose -->
-    <form id="gb-form" class="mt-10 grid gap-4 max-w-xl mx-auto reveal">
-      <div class="grid sm:grid-cols-[1fr_auto] gap-3">
-        <input
-          id="gb-name" maxlength="40" required
-          class="border border-ink/20 bg-paper/80 px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
-          placeholder="Ваше имя"
-        />
-        <select id="gb-color" class="border border-ink/20 bg-paper/80 px-4 py-3 font-mono text-xs uppercase tracking-widest focus:border-terracotta focus:outline-none cursor-pointer">
-          <option value="cream">Крем</option>
-          <option value="blush">Терракот</option>
-          <option value="moss">Зелень</option>
-          <option value="gold">Золото</option>
-        </select>
+    <form id="gb-form" class="mt-10 grid gap-5 max-w-xl mx-auto reveal">
+      <div class="grid sm:grid-cols-[1fr_auto] gap-4">
+        <label class="block">
+          <span class="eyebrow">Ваше имя</span>
+          <input
+            id="gb-name" maxlength="40" required
+            class="mt-2 w-full border border-ink/20 bg-paper/80 px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
+            placeholder="Иван Иванов"
+          />
+        </label>
+        <label class="block">
+          <span class="eyebrow">Цвет записки</span>
+          <select id="gb-color" class="mt-2 w-full border border-ink/20 bg-paper/80 px-4 py-3 font-mono text-xs uppercase tracking-widest focus:border-terracotta focus:outline-none cursor-pointer">
+            <option value="cream">Крем</option>
+            <option value="blush">Терракот</option>
+            <option value="moss">Зелень</option>
+            <option value="gold">Золото</option>
+          </select>
+        </label>
       </div>
-      <textarea
-        id="gb-text" maxlength="180" required rows="3"
-        class="border border-ink/20 bg-paper/80 px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
-        placeholder="Пара тёплых слов…"
-      ></textarea>
+      <label class="block">
+        <span class="eyebrow">Пожелание</span>
+        <textarea
+          id="gb-text" maxlength="180" required rows="3"
+          class="mt-2 w-full border border-ink/20 bg-paper/80 px-4 py-3 font-serif italic text-lg focus:border-terracotta focus:outline-none focus:ring-0"
+          placeholder="Пара тёплых слов…"
+        ></textarea>
+      </label>
       <div class="flex items-center justify-between">
         <span id="gb-count" class="font-mono text-[0.65rem] tracking-widest uppercase text-muted">0 / 180</span>
         <button
@@ -100,13 +109,15 @@ import Ornament from './Ornament.astro';
         el.className = `gb-note gb-note-${n.color}`;
         el.style.setProperty('--rot', `${n.rot}deg`);
         el.style.setProperty('--delay', `${i * 60}ms`);
-        const safeName = n.name.replace(/[<>&"']/g, '');
-        const safeText = n.text.replace(/[<>&"']/g, '');
-        el.innerHTML = `
-          <span class="gb-note-pin"></span>
-          <p class="gb-note-text">${safeText}</p>
-          <p class="gb-note-name">— ${safeName}</p>
-        `;
+        const pin = document.createElement('span');
+        pin.className = 'gb-note-pin';
+        const txt = document.createElement('p');
+        txt.className = 'gb-note-text';
+        txt.textContent = n.text;
+        const who = document.createElement('p');
+        who.className = 'gb-note-name';
+        who.textContent = `— ${n.name}`;
+        el.append(pin, txt, who);
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'gb-note-remove';
@@ -265,19 +276,29 @@ import Ornament from './Ornament.astro';
   .gb-note-name {
     margin-top: 0.75rem;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase;
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
     color: rgba(26,20,16,0.6);
     text-align: right;
   }
   .gb-note-remove {
-    position: absolute; top: 4px; right: 6px;
-    width: 18px; height: 18px;
+    position: absolute; top: 2px; right: 4px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
     background: transparent; border: none;
-    color: rgba(26,20,16,0.35);
-    font-size: 16px; line-height: 1;
-    cursor: pointer; opacity: 0;
-    transition: opacity 200ms ease, color 200ms ease;
+    color: rgba(26,20,16,0.4);
+    font-size: 18px; line-height: 1;
+    cursor: pointer; opacity: 0.45;
+    transition: opacity 200ms ease, color 200ms ease, transform 200ms ease;
+    border-radius: 50%;
   }
-  .gb-note:hover .gb-note-remove { opacity: 1; }
-  .gb-note-remove:hover { color: #B85C3C; }
+  .gb-note-remove:focus-visible {
+    outline: 2px solid #B85C3C; outline-offset: 2px;
+    opacity: 1;
+  }
+  .gb-note:hover .gb-note-remove,
+  .gb-note-remove:hover { opacity: 1; color: #B85C3C; }
+  /* Touch / no-hover devices: keep the affordance permanently visible. */
+  @media (hover: none) {
+    .gb-note-remove { opacity: 0.6; }
+  }
 </style>

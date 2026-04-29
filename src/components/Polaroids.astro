@@ -2,7 +2,7 @@
 // Draggable polaroid memories with hand-drawn SVG illustrations.
 // User can throw them around — physics-lite (linear drag with ease).
 ---
-<section id="polaroids" class="section relative">
+<section id="polaroids" class="section relative overflow-hidden">
   <div class="container-wide">
     <div class="text-center reveal">
       <p class="eyebrow">Воспоминания</p>
@@ -12,7 +12,7 @@
           <circle cx="14" cy="14" r="1.2" fill="currentColor" />
         </svg>
       </div>
-      <h2 class="mt-5 text-5xl md:text-7xl font-display">
+      <h2 class="mt-5 text-5xl md:text-7xl font-display [text-wrap:balance]">
         Маленький <span class="serif-italic text-terracotta">архив</span>
       </h2>
       <p class="mt-6 text-muted max-w-md mx-auto">
@@ -271,7 +271,7 @@
   .pl-hint {
     position: absolute; bottom: -2rem; left: 50%; transform: translateX(-50%);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+    font-size: 0.625rem; letter-spacing: 0.4em; text-transform: uppercase;
     color: rgba(94,79,67,0.55); white-space: nowrap;
   }
 </style>

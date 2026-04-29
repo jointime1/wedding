@@ -371,15 +371,20 @@
   /* ─── Countdown flip-tiles ───────────────────────────────────────────── */
   .countdown {
     display: inline-flex; gap: 0.5rem; align-items: stretch;
+    flex-wrap: wrap; justify-content: center;
+    max-width: 100%;
   }
   .cd-tile {
     position: relative;
-    min-width: 4.5rem;
+    min-width: 3.75rem;
     background: linear-gradient(180deg, #F8F1E3 0%, #EAD9B8 100%);
     border: 1px solid rgba(26,20,16,0.3);
-    padding: 0.75rem 0.85rem 0.6rem;
+    padding: 0.65rem 0.6rem 0.55rem;
     text-align: center;
     box-shadow: inset 0 -10px 16px -10px rgba(26,20,16,0.18), 0 1px 0 rgba(26,20,16,0.08);
+  }
+  @media (min-width: 480px) {
+    .cd-tile { min-width: 4.5rem; padding: 0.75rem 0.85rem 0.6rem; }
   }
   .cd-tile::after {
     content: ""; position: absolute; left: 0; right: 0; top: 50%;
@@ -388,12 +393,13 @@
   .cd-num {
     font-family: 'Instrument Serif', serif;
     font-size: 2.5rem; line-height: 1; display: inline-block;
+    font-variant-numeric: tabular-nums;
     transition: transform 600ms cubic-bezier(.2,.8,.2,1), opacity 600ms ease;
   }
   .cd-num.is-ticking { transform: rotateX(90deg); opacity: 0; }
   .cd-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.5rem; letter-spacing: 0.3em; text-transform: uppercase;
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
     color: rgba(94,79,67,0.85); margin-top: 0.4rem; display: block;
   }
 
@@ -421,4 +427,15 @@
   .petal { display: none; }
   html { scroll-behavior: auto; }
   .signature-path { stroke-dashoffset: 0 !important; transition: none; }
+}
+
+/* When the tab is backgrounded, freeze decorative animations so we don't
+   burn battery in another window. */
+html[data-page-hidden="1"] .petal,
+html[data-page-hidden="1"] .snowflake,
+html[data-page-hidden="1"] .eagle,
+html[data-page-hidden="1"] .spin-slow,
+html[data-page-hidden="1"] .drift-slow,
+html[data-page-hidden="1"] .float-soft {
+  animation-play-state: paused !important;
 }

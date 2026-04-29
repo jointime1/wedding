@@ -7,7 +7,7 @@ const { includePicnic } = Astro.props;
   <div class="container-wide">
     <div class="text-center reveal">
       <p class="eyebrow"><span class="dot-ornament"></span>Программа<span class="dot-ornament"></span></p>
-      <h2 class="mt-4 text-5xl md:text-7xl font-display">
+      <h2 class="mt-4 text-5xl md:text-7xl font-display [text-wrap:balance]">
         {includePicnic ? 'Два акта' : 'Один вечер'}
         <span class="serif-italic text-terracotta">
           {includePicnic ? ' одной ' : ' одной '}
@@ -23,7 +23,7 @@ const { includePicnic } = Astro.props;
         <!-- vintage tape -->
         <span class="tape hidden md:block -top-3 left-12 w-24 h-6 -rotate-6"></span>
 
-        <div data-tilt class="tilt-card ornate-frame relative bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] vintage-border p-10 md:p-14 overflow-hidden paper-stack">
+        <div data-tilt class="tilt-card ornate-frame relative bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] vintage-border p-6 sm:p-10 md:p-14 overflow-hidden paper-stack">
           <span class="corner-bl"></span><span class="corner-br"></span>
           <div class="grain"></div>
           <span class="tilt-shine"></span>
@@ -46,7 +46,7 @@ const { includePicnic } = Astro.props;
 
             <div class="mt-10">
               <p class="font-display serif-italic text-clay text-xl md:text-2xl">торжество и вечер</p>
-              <h3 class="mt-2 font-display text-5xl md:text-6xl leading-[0.95]">
+              <h3 class="mt-2 font-display text-4xl sm:text-5xl md:text-6xl leading-[0.95] [text-wrap:balance]">
                 Свадьба <span class="serif-italic text-terracotta">во Владикавказе</span>
               </h3>
             </div>
@@ -104,7 +104,7 @@ const { includePicnic } = Astro.props;
 
               <div class="mt-10">
                 <p class="font-display serif-italic text-moss text-xl md:text-2xl">тихое утро в горах</p>
-                <h3 class="mt-2 font-display text-5xl md:text-6xl leading-[0.95]">
+                <h3 class="mt-2 font-display text-4xl sm:text-5xl md:text-6xl leading-[0.95] [text-wrap:balance]">
                   Пикник <span class="serif-italic text-moss">в горах Осетии</span>
                 </h3>
               </div>
