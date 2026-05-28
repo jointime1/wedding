@@ -286,10 +286,10 @@ const {
         });
       });
 
-      // ─── Live countdown to 19 Sep 2026, 17:00 (Vladikavkaz, UTC+3) ────
+      // ─── Live countdown to 19 Sep 2026, 15:00 (Vladikavkaz, UTC+3) ────
       const cd = document.querySelector<HTMLElement>('[data-countdown]');
       if (cd) {
-        const target = new Date('2026-09-19T17:00:00+03:00').getTime();
+        const target = new Date('2026-09-19T15:00:00+03:00').getTime();
         const tiles = {
           d: cd.querySelector<HTMLElement>('[data-cd="d"]'),
           h: cd.querySelector<HTMLElement>('[data-cd="h"]'),
