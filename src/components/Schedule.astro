@@ -6,13 +6,9 @@ const { includePicnic } = Astro.props;
 <section id="schedule" class="section relative">
   <div class="container-wide">
     <div class="text-center reveal">
-      <p class="eyebrow"><span class="dot-ornament"></span>Программа<span class="dot-ornament"></span></p>
+      <p class="eyebrow"><span class="dot-ornament"></span>Что и когда<span class="dot-ornament"></span></p>
       <h2 class="mt-4 text-5xl md:text-7xl font-display [text-wrap:balance]">
-        {includePicnic ? 'Два акта' : 'Один вечер'}
-        <span class="serif-italic text-terracotta">
-          {includePicnic ? ' одной ' : ' одной '}
-        </span>
-        истории
+        Программа
       </h2>
       <div class="mt-6 text-ink/50 mx-auto"><Ornament variant="rule" /></div>
     </div>
@@ -28,17 +24,8 @@ const { includePicnic } = Astro.props;
           <div class="grain"></div>
           <span class="tilt-shine"></span>
 
-          <!-- Massive watermark Roman numeral -->
-          <span aria-hidden="true"
-                class="pointer-events-none select-none absolute -right-6 -bottom-12 font-display serif-italic text-[18rem] md:text-[24rem] leading-none text-terracotta/10">I</span>
-
           <div class="relative">
-            <div class="flex items-baseline justify-between">
-              <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-clay">Актъ первый</span>
-              <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-muted">19 · IX</span>
-            </div>
-
-            <div class="mt-8 flex items-center gap-4 text-clay/40">
+            <div class="flex items-center gap-4 text-clay/40">
               <span class="hair-rule flex-1"></span>
               <Ornament variant="diamond" class="w-4 h-4 text-clay" />
               <span class="hair-rule flex-1"></span>
@@ -52,25 +39,21 @@ const { includePicnic } = Astro.props;
             </div>
 
             <p class="mt-8 leading-[1.85] text-ink/80">
-              Торжественная часть, ужин, музыка и танцы до поздней ночи — день, в котором нам важен каждый из&nbsp;вас.
+              Торжественная часть, ужин, музыка и танцы до поздней ночи. Если вы хотели побывать на кавказской свадьбе — это&nbsp;она.
             </p>
 
             <dl class="mt-10 grid grid-cols-2 gap-6 text-sm border-t border-clay/20 pt-6">
               <div>
                 <dt class="eyebrow">Начало</dt>
-                <dd class="mt-2 font-serif italic text-lg">15:00</dd>
-              </div>
-              <div>
-                <dt class="eyebrow">Адрес</dt>
-                <dd class="mt-2 font-serif italic text-lg">«Торне», Гизель</dd>
+                <dd class="mt-2 font-serif italic text-lg">19 сентября, 15:00</dd>
               </div>
               <div>
                 <dt class="eyebrow">Дресс-код</dt>
-                <dd class="mt-2 font-serif italic text-lg">элегантный, тёплые тона</dd>
+                <dd class="mt-2 font-serif italic text-lg">вечерний, палитра любая</dd>
               </div>
-              <div>
-                <dt class="eyebrow">Атмосфера</dt>
-                <dd class="mt-2 font-serif italic text-lg">долгие тосты, живая музыка</dd>
+              <div class="col-span-2">
+                <dt class="eyebrow">Адрес</dt>
+                <dd class="mt-2 font-serif italic text-lg">ресторан «Торне», Гизельское шоссе 26, Владикавказ</dd>
               </div>
             </dl>
           </div>
@@ -87,48 +70,44 @@ const { includePicnic } = Astro.props;
             <div class="grain"></div>
             <span class="tilt-shine"></span>
 
-            <span aria-hidden="true"
-                  class="pointer-events-none select-none absolute -left-8 -bottom-12 font-display serif-italic text-[18rem] md:text-[24rem] leading-none text-moss/15">II</span>
-
             <div class="relative">
-              <div class="flex items-baseline justify-between">
-                <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-moss">Актъ второй</span>
-                <span class="font-mono text-[0.65rem] tracking-[0.35em] uppercase text-muted">20 · IX</span>
-              </div>
-
-              <div class="mt-8 flex items-center gap-4 text-moss/40">
+              <div class="flex items-center gap-4 text-moss/40">
                 <span class="hair-rule flex-1"></span>
                 <Ornament variant="diamond" class="w-4 h-4 text-moss" />
                 <span class="hair-rule flex-1"></span>
               </div>
 
               <div class="mt-10">
-                <p class="font-display serif-italic text-moss text-xl md:text-2xl">тихое утро в горах</p>
+                <p class="font-display serif-italic text-moss text-xl md:text-2xl">второй день</p>
                 <h3 class="mt-2 font-display text-4xl sm:text-5xl md:text-6xl leading-[0.95] [text-wrap:balance]">
                   Пикник <span class="serif-italic text-moss">в горах Осетии</span>
                 </h3>
               </div>
 
               <p class="mt-8 leading-[1.85] text-ink/80">
-                Уезжаем небольшой компанией в горы — провести день неспешно, с едой на траве, тишиной и видом, который останется с&nbsp;вами надолго.
+                Уезжаем небольшой компанией в горы — провести день неспешно, с едой на траве, тишиной и красивыми&nbsp;видами.
               </p>
 
               <dl class="mt-10 grid grid-cols-2 gap-6 text-sm border-t border-moss/20 pt-6">
                 <div>
                   <dt class="eyebrow">Сбор</dt>
-                  <dd class="mt-2 font-serif italic text-lg">утром, от отеля</dd>
+                  <dd class="mt-2 font-serif italic text-lg">в 11:00</dd>
+                </div>
+                <div>
+                  <dt class="eyebrow">Дорога</dt>
+                  <dd class="mt-2 font-serif italic text-lg">~1 час в одну сторону</dd>
                 </div>
                 <div>
                   <dt class="eyebrow">Место</dt>
                   <dd class="mt-2 font-serif italic text-lg">сюрприз</dd>
                 </div>
                 <div>
-                  <dt class="eyebrow">Что взять</dt>
-                  <dd class="mt-2 font-serif italic text-lg">тёплую куртку и улыбку</dd>
+                  <dt class="eyebrow">Трансфер</dt>
+                  <dd class="mt-2 font-serif italic text-lg">будет, место укажем позже</dd>
                 </div>
-                <div>
-                  <dt class="eyebrow">Дорога</dt>
-                  <dd class="mt-2 font-serif italic text-lg">~ полтора часа</dd>
+                <div class="col-span-2">
+                  <dt class="eyebrow">Что взять</dt>
+                  <dd class="mt-2 font-serif italic text-lg">ветровку, толстовку и комфортную одежду</dd>
                 </div>
               </dl>
             </div>
