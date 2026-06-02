@@ -17,6 +17,7 @@ const action = process.env.PUBLIC_GOOGLE_FORM_ACTION;
 const eName = process.env.PUBLIC_ENTRY_NAME;
 const eAttending = process.env.PUBLIC_ENTRY_ATTENDING;
 const ePlusOne = process.env.PUBLIC_ENTRY_PLUS_ONE;
+const eHotel = process.env.PUBLIC_ENTRY_HOTEL;
 const ePicnic = process.env.PUBLIC_ENTRY_PICNIC;
 const eNote = process.env.PUBLIC_ENTRY_NOTE;
 
@@ -41,7 +42,7 @@ if (!/^https:\/\/docs\.google\.com\/forms\/d\/e\/[^/]+\/formResponse$/.test(acti
   console.error('  expected: https://docs.google.com/forms/d/e/<FORM_ID>/formResponse');
   process.exit(2);
 }
-for (const [k, v] of Object.entries({ eName, eAttending, ePlusOne, ePicnic, eNote })) {
+for (const [k, v] of Object.entries({ eName, eAttending, ePlusOne, eHotel, ePicnic, eNote })) {
   if (v && !/^entry\.\d+$/.test(v)) {
     console.error(`✗ ${k}="${v}" doesn't look like a Google Forms entry id (entry.<digits>)`);
     process.exit(2);
@@ -52,6 +53,7 @@ const body = new URLSearchParams();
 body.set(eName, 'Smoke Test — please ignore');
 body.set(eAttending, 'Да, буду');
 body.set(ePlusOne, 'Один(одна)');
+if (eHotel) body.set(eHotel, 'Нет, не нужна');
 if (ePicnic) body.set(ePicnic, 'Только свадьба');
 body.set(eNote, `automated smoke test from tests/rsvp-submit.mjs at ${new Date().toISOString()}`);
 
