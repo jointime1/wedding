@@ -1,0 +1,23 @@
+# GitLab Pages deploy for the Astro site.
+# Serves the built `dist/` (renamed to `public/`) at
+# https://jointime.alex.gitlab.io/wedding/  (base is /wedding).
+image: node:20
+
+pages:
+  stage: deploy
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npx astro build
+    - rm -rf public
+    - mv dist public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
