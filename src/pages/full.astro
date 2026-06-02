@@ -2,22 +2,16 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Format from '../components/Format.astro';
-import Polaroids from '../components/Polaroids.astro';
 import Schedule from '../components/Schedule.astro';
-import Venue from '../components/Venue.astro';
-import Hotel from '../components/Hotel.astro';
-import Guestbook from '../components/Guestbook.astro';
+import Logistics from '../components/Logistics.astro';
 import RSVP from '../components/RSVP.astro';
 import Contacts from '../components/Contacts.astro';
 ---
 <Base>
   <Hero includePicnic={true} />
   <Format includePicnic={true} />
-  <Polaroids />
   <Schedule includePicnic={true} />
-  <Venue />
-  <Hotel />
-  <Guestbook />
+  <Logistics includePicnic={true} />
   <RSVP includePicnic={true} />
   <Contacts />
 </Base>

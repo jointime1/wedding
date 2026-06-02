@@ -1,0 +1,125 @@
+---
+import Ornament from './Ornament.astro';
+export interface Props { includePicnic: boolean }
+const { includePicnic } = Astro.props;
+---
+<section id="logistics" class="section relative">
+  <div class="container-narrow">
+    <div class="text-center reveal">
+      <p class="eyebrow"><span class="dot-ornament"></span>Как добраться и где жить<span class="dot-ornament"></span></p>
+      <h2 class="mt-4 text-5xl md:text-7xl font-display [text-wrap:balance]">Логистика</h2>
+      <div class="mt-6 text-ink/50 mx-auto"><Ornament variant="rule" /></div>
+    </div>
+
+    <ol class="logi-path mt-16 reveal">
+      <!-- 1 — Arrival -->
+      <li class="logi-step">
+        <span class="logi-dot"></span>
+        <div class="logi-card">
+          <p class="eyebrow text-clay">Дорога</p>
+          <p class="mt-3 leading-[1.8] text-ink/85">
+            Прибываете в аэропорт Владикавказа&nbsp;(Беслан) — оттуда около&nbsp;30&nbsp;минут до города.
+          </p>
+        </div>
+      </li>
+
+      <!-- 2 — Where to stay -->
+      <li class="logi-step">
+        <span class="logi-dot"></span>
+        <div class="logi-card">
+          <p class="eyebrow text-clay">Где остановиться</p>
+          <p class="mt-3 leading-[1.8] text-ink/85">
+            Мы бронируем апартаменты на сутки (19–20&nbsp;сентября) для гостей из других городов — пожалуйста, отметьте в анкете, нужна ли вам ночёвка. Если планируете задержаться подольше — поделимся промокодом на скидку в наших апартаментах: напишите нам в Telegram
+            <a href="https://t.me/danamindz" target="_blank" rel="noopener noreferrer" class="underline-hand text-terracotta whitespace-nowrap">@danamindz</a>
+            или
+            <a href="https://t.me/jointimer" target="_blank" rel="noopener noreferrer" class="underline-hand text-terracotta whitespace-nowrap">@jointimer</a>.
+          </p>
+        </div>
+      </li>
+
+      <!-- 3 — Day one, the wedding -->
+      <li class="logi-step">
+        <span class="logi-dot"></span>
+        <div class="logi-card">
+          <p class="eyebrow text-clay">19 сентября · суббота</p>
+          <p class="mt-3 leading-[1.8] text-ink/85">
+            Большая свадьба в ресторане «Торне». Начало в&nbsp;15:00, закончим ближе к ночи. Ресторан — в 15&nbsp;минутах от центра города: можно вызвать такси в Яндексе или написать нам — поможем с&nbsp;логистикой.
+          </p>
+        </div>
+      </li>
+
+      {includePicnic && (
+        <>
+          <!-- 4 — Day two, the picnic -->
+          <li class="logi-step">
+            <span class="logi-dot logi-dot-moss"></span>
+            <div class="logi-card">
+              <p class="eyebrow text-moss">20 сентября · пикник в горах</p>
+              <p class="mt-3 leading-[1.8] text-ink/85">
+                Сбор на трансфер в&nbsp;11:00 в центре города, подробности будут ближе к дате. Едем в ущелье (около часа по горным дорогам) и останавливаемся на шашлык-пикник в красивом месте. Обратно — к&nbsp;16:00.
+              </p>
+            </div>
+          </li>
+
+          <!-- 5 — Departure -->
+          <li class="logi-step">
+            <span class="logi-dot logi-dot-moss"></span>
+            <div class="logi-card">
+              <p class="eyebrow text-moss">Если улетаете 20 сентября</p>
+              <p class="mt-3 leading-[1.8] text-ink/85">
+                Удобнее всего брать рейсы «Победы» в&nbsp;19:10 или&nbsp;21:35 (в Москву) — успеете вернуться с пикника.
+              </p>
+            </div>
+          </li>
+        </>
+      )}
+    </ol>
+  </div>
+</section>
+
+<style is:global>
+  .logi-path {
+    position: relative;
+    margin-inline: auto;
+    max-width: 42rem;
+    padding-left: 2.75rem;
+    list-style: none;
+  }
+  /* the connecting line */
+  .logi-path::before {
+    content: "";
+    position: absolute;
+    left: 0.75rem; top: 0.4rem; bottom: 0.4rem;
+    width: 2px;
+    background: linear-gradient(180deg,
+      rgba(140,74,47,0.45), rgba(140,74,47,0.30) 55%, rgba(78,89,70,0.40));
+  }
+  .logi-step {
+    position: relative;
+    padding-bottom: 2.75rem;
+  }
+  .logi-step:last-child { padding-bottom: 0; }
+  .logi-dot {
+    position: absolute;
+    left: -2.4rem; top: 0.15rem;
+    width: 1rem; height: 1rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #C16A45, #5E2F1C);
+    box-shadow:
+      0 0 0 4px #F5ECD9,
+      0 4px 8px -2px rgba(0,0,0,0.35),
+      inset 0 -2px 3px rgba(0,0,0,0.4),
+      inset 0 1px 2px rgba(255,255,255,0.3);
+  }
+  .logi-dot-moss {
+    background: radial-gradient(circle at 35% 30%, #6F7B66, #3F4838);
+  }
+  .logi-card {
+    position: relative;
+  }
+  .logi-card > p:first-child { letter-spacing: 0.3em; }
+  @media (min-width: 768px) {
+    .logi-path { padding-left: 3.25rem; }
+    .logi-dot { left: -2.85rem; width: 1.1rem; height: 1.1rem; }
+  }
+</style>
