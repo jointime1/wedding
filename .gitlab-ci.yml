@@ -1,6 +1,6 @@
 # GitLab Pages deploy for the Astro site.
-# Serves the built `dist/` (renamed to `public/`) at
-# https://jointime.alex.gitlab.io/wedding/  (base is /wedding).
+# Serves the built `dist/` (renamed to `public/`) at the project's
+# unique Pages domain: https://wedding-a38614.gitlab.io/  (base is /).
 image: node:20
 
 pages:
