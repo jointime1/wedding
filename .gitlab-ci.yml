@@ -3,6 +3,12 @@
 # unique Pages domain: https://wedding-a38614.gitlab.io/  (base is /).
 image: node:20
 
+# Outbound HTTPS to gitlab.com is flaky in this environment, so retry the
+# source fetch a few times before giving up.
+variables:
+  GET_SOURCES_ATTEMPTS: "5"
+  GIT_DEPTH: "5"
+
 pages:
   stage: deploy
   cache:
