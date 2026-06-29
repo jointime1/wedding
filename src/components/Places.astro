@@ -1,0 +1,105 @@
+---
+import Ornament from './Ornament.astro';
+export interface Props { includePicnic: boolean }
+const { includePicnic } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<section id="places" class="section relative">
+  <div class="container-wide">
+    <div class="text-center reveal">
+      <p class="eyebrow"><span class="dot-ornament"></span>Где встречаемся<span class="dot-ornament"></span></p>
+      <h2 class="mt-4 text-5xl md:text-7xl font-display [text-wrap:balance]">Места</h2>
+      <div class="mt-6 text-ink/50 mx-auto"><Ornament variant="rule" /></div>
+      <p class="mt-6 mx-auto max-w-xl text-ink/60 leading-[1.8]">
+        Чтобы вы заранее представляли, куда ехать и где мы будем вас&nbsp;ждать.
+      </p>
+    </div>
+
+    <div class={`mt-16 md:mt-20 grid gap-12 md:gap-10 items-start mx-auto ${includePicnic ? 'md:grid-cols-2 max-w-5xl' : 'md:grid-cols-1 max-w-xl'}`}>
+      <!-- Место 1 — Свадьба в «Торне» -->
+      <figure class="relative reveal">
+        <span class="tape hidden md:block -top-3 left-10 w-24 h-6 -rotate-6"></span>
+
+        <div data-tilt class="tilt-card ornate-frame relative bg-gradient-to-br from-[#F4E5D0] via-paper to-[#EED9BE] vintage-border p-4 sm:p-5 overflow-hidden paper-stack">
+          <span class="corner-bl"></span><span class="corner-br"></span>
+          <span class="tilt-shine"></span>
+
+          <div class="relative overflow-hidden">
+            <img
+              src={`${base}/places/torne-hall.jpg`}
+              width="1344" height="1400"
+              loading="lazy" decoding="async"
+              alt="Интерьер банкетного зала «Торне»: кирпичные стены, арочные окна и тёплый свет"
+              class="block w-full h-72 sm:h-80 object-cover"
+            />
+            <div class="grain"></div>
+          </div>
+
+          <figcaption class="relative mt-5 px-2 pb-1 text-center">
+            <p class="eyebrow text-clay">19 сентября · свадьба</p>
+            <p class="mt-3 font-display text-3xl md:text-4xl leading-tight">
+              Зал <span class="serif-italic text-terracotta">«Торне»</span>
+            </p>
+            <p class="mt-3 text-ink/65 leading-[1.7] text-[0.95rem]">
+              Концертно-банкетный зал · с.&nbsp;Гизель, Гизельское шоссе,&nbsp;26
+            </p>
+            <a
+              href="https://yandex.ru/maps/org/torne/166052159422/"
+              target="_blank" rel="noopener noreferrer"
+              class="group mt-4 inline-flex items-center gap-2 font-mono text-[0.7rem] tracking-editorial uppercase text-terracotta cursor-pointer"
+            >
+              <span class="underline-hand">Открыть на карте</span>
+              <svg width="20" height="9" viewBox="0 0 22 10" fill="none" aria-hidden="true"
+                   class="transition-transform duration-300 group-hover:translate-x-1">
+                <path d="M0 5 H20 M15 1 L20 5 L15 9" stroke="currentColor" stroke-width="1.4" />
+              </svg>
+            </a>
+          </figcaption>
+        </div>
+      </figure>
+
+      {includePicnic && (
+        <!-- Место 2 — Пикник в горах -->
+        <figure class="relative reveal md:mt-12">
+          <span class="tape hidden md:block -top-3 right-10 w-24 h-6 rotate-6"
+                style="background: linear-gradient(135deg, rgba(78,89,70,0.22), rgba(168,135,62,0.18));"></span>
+
+          <div data-tilt class="tilt-card ornate-frame relative bg-gradient-to-br from-[#E6EADC] via-paper to-[#D1DBC5] vintage-border p-4 sm:p-5 overflow-hidden paper-stack">
+            <span class="corner-bl"></span><span class="corner-br"></span>
+            <span class="tilt-shine"></span>
+
+            <div class="relative overflow-hidden">
+              <img
+                src={`${base}/places/mountains.jpg`}
+                width="1300" height="866"
+                loading="lazy" decoding="async"
+                alt="Горное ущелье Северной Осетии: бирюзовая река среди скал и осенний лес"
+                class="block w-full h-72 sm:h-80 object-cover"
+              />
+              <div class="grain"></div>
+            </div>
+
+            <figcaption class="relative mt-5 px-2 pb-1 text-center">
+              <p class="eyebrow text-moss">20 сентября · пикник</p>
+              <p class="mt-3 font-display text-3xl md:text-4xl leading-tight">
+                Горы <span class="serif-italic text-moss">Осетии</span>
+              </p>
+              <p class="mt-3 text-ink/65 leading-[1.7] text-[0.95rem]">
+                Шашлык-пикник в ущелье · около часа езды от&nbsp;Владикавказа
+              </p>
+              <p class="mt-4 inline-block font-mono text-[0.7rem] tracking-editorial uppercase text-muted">
+                Точное место — сюрприз
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+      )}
+    </div>
+
+    {includePicnic && (
+      <p class="mt-12 text-center font-mono text-[0.6rem] tracking-wide text-muted/70 reveal">
+        Фото гор: Alexxx1979 · Wikimedia&nbsp;Commons · CC&nbsp;BY-SA&nbsp;4.0
+      </p>
+    )}
+  </div>
+</section>
